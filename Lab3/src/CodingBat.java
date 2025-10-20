@@ -1,7 +1,7 @@
-package Lab3;
-
+// package Lab3;
+// breakpoint - red dot on the left side
 public class CodingBat {
-    static Integer sumDouble(int a, int b){
+    static int sumDouble(int a, int b){
         int sum = a + b;
 
         if (a == b){
@@ -11,20 +11,19 @@ public class CodingBat {
         return sum;
     }
 
-    static Boolean monkeyTrouble(boolean aSmile, boolean bSmile){
+    static boolean monkeyTrouble(boolean aSmile, boolean bSmile){
         if ((aSmile && bSmile) || (!aSmile && !bSmile)){
             return true;
         }
         return false;
     }
 
-    static Boolean lucky13(int[] nums) {
+    static boolean lucky13(int[] nums) {
         for (int num : nums){
             if (num == 1 || num == 3){
                 return false;
             }
         }
-
         return true;
     }
 
