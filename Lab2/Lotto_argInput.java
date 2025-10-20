@@ -1,3 +1,4 @@
+package Lab2;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class Lotto_argInput {
         for (int i = 0; i < 6; i++) {
             while (i < 6) {
                 int input_num = Integer.parseInt(args[i]);
-                if (input_num > 49 || input_num < 1) {
+                if (input_num > 49 || input_num < 1 || !inputNumbers.add(input_num)) {
                     System.out.println("Try again!");
                     return;
                 } else {
