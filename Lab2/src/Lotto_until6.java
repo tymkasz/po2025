@@ -1,4 +1,4 @@
-package Lab2;
+// package Lab2;
 import java.util.Random;
 import java.util.HashSet;
 
