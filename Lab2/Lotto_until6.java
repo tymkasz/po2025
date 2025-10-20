@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.HashSet;
 
 public class Lotto_until6 {
-    public static void mian(String[] args){
+    public static void main(String[] args){
         // HashSet - no duplicates
         HashSet<Integer> inputNumbers = new HashSet<Integer>();
         Random generator = new Random();
