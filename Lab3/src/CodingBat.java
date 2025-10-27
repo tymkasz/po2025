@@ -1,6 +1,7 @@
 // package Lab3;
 // breakpoint - red dot on the left side
 public class CodingBat {
+    // static methods -> do not need to create instances of a class to invoke methods
     static int sumDouble(int a, int b){
         int sum = a + b;
 
