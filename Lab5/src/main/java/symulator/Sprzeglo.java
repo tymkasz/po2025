@@ -9,7 +9,7 @@ public class Sprzeglo extends Komponent
         super(producent, model);
     }
 
-    public void wciśnij()
+    public void wcisnij()
     {
         this.stanSprzegla = true;
         System.out.println("Sprzęgło wciśnięte");
