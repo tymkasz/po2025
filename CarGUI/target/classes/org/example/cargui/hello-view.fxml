@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.cargui.HelloController">
+
+    <top>
+        <VBox>
+            <children>
+                <MenuBar>
+                    <menus>
+                        <Menu text="Plik">
+                            <items>
+                                <MenuItem text="Otwórz"/>
+                                <MenuItem text="Zapisz"/>
+                                <MenuItem text="Zamknij"/>
+                            </items>
+                        </Menu>
+                        <Menu text="Edycja">
+                            <items>
+                                <MenuItem text="Kopiuj"/>
+                                <MenuItem text="Wklej"/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <ToolBar>
+                    <items>
+                        <Label text="Samochód: "/>
+                        <ComboBox fx:id="carSelectorCombo" promptText="Wybierz samochód"/>
+                        <Button text="Dodaj nowy"/>
+                        <Button text="Usuń"/>
+                    </items>
+                </ToolBar>
+            </children>
+        </VBox>
+    </top>
+
+    <left>
+        <VBox prefWidth="250.0" spacing="5">
+            <padding>
+                <Insets top="5" left="5" bottom="5" right="5"/>
+            </padding>
+            <children>
+                <TitledPane animated="false" text="Samochód">
+                    <content>
+                        <GridPane hgap="5" vgap="5">
+                            <padding>
+                                <Insets top="10" left="10" bottom="10" right="10"/>
+                            </padding>
+                            <children>
+                                <Label text="Model" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <TextField fx:id="modelField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                <Label text="Nr rejestracyjny" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField fx:id="regField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField fx:id="wagaField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                <Label text="Prędkość" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <TextField fx:id="predkoscField" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <Button text="Włącz"/>
+                                    <Button text="Wyłącz"/>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                    </content>
+                </TitledPane>
+
+                <TitledPane animated="false" text="Skrzynia Biegów">
+                    <content>
+                        <GridPane hgap="5" vgap="5">
+                            <padding>
+                                <Insets top="10" left="10" bottom="10" right="10"/>
+                            </padding>
+                            <children>
+                                <Label text="Nazwa" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <Label text="Cena" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Label text="Bieg" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <TextField editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <Button text="Zwiększ bieg"/>
+                                    <Button text="Zmniejsz bieg"/>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                    </content>
+                </TitledPane>
+
+                <TitledPane animated="false" text="Silnik">
+                    <content>
+                        <GridPane hgap="5" vgap="5">
+                            <padding>
+                                <Insets top="10" left="10" bottom="10" right="10"/>
+                            </padding>
+                            <children>
+                                <Label text="Nazwa" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <Label text="Cena" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Label text="Obroty" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <TextField editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <Button text="Dodaj gazu"/>
+                                    <Button text="Ujmij gazu"/>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                    </content>
+                </TitledPane>
+
+                <TitledPane animated="false" text="Sprzęgło">
+                    <content>
+                        <GridPane hgap="5" vgap="5">
+                            <padding>
+                                <Insets top="10" left="10" bottom="10" right="10"/>
+                            </padding>
+                            <children>
+                                <Label text="Nazwa" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <Label text="Cena" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Label text="Stan" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <TextField editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <Button text="Naciśnij"/>
+                                    <Button text="Zwolnij"/>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                    </content>
+                </TitledPane>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <AnchorPane style="-fx-background-color: #90ee90;">
+            <children>
+                <Label text="Mapa" layoutX="14.0" layoutY="14.0" />
+                <ImageView fx:id="carImageView" fitHeight="100.0" fitWidth="100.0" layoutX="14.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../car-icon.png" />
+                    </image>
+                </ImageView>
+                <Label text="Car" layoutX="14.0" layoutY="90.0" />
+            </children>
+        </AnchorPane>
+    </center>
+
+</BorderPane>
