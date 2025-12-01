@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.cargui.AddCarController">
+
+    <padding>
+        <Insets top="5" left="5" bottom="5" right="5"/>
+    </padding>
+    <children>
+    <TitledPane animated="false" text="Samochód">
+        <content>
+            <GridPane hgap="5" vgap="5">
+                <padding>
+                    <Insets top="10" left="10" bottom="10" right="10"/>
+                </padding>
+                <children>
+                    <Label text="Model" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="modelChooseField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+
+                    <Label text="Nr rejestracyjny" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="regChooseField" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+
+                    <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="wagaChooseField" GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+
+                    <Label text="Prędkość" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="predkoscChooseField" GridPane.rowIndex="3" GridPane.columnIndex="1" editable="false"/>
+
+                    <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                        <Button fx:id="confirmButton" text="Potwierdź" onAction="#onStart"/>
+                        <Button fx:id="cancelButton" text="Odrzuć" onAction="#onTurnOff"/>
+                    </HBox>
+                </children>
+            </GridPane>
+        </content>
+    </TitledPane>
+    </children>
+
+</VBox>

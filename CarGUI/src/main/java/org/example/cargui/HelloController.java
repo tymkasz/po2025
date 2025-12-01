@@ -2,14 +2,23 @@ package org.example.cargui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import org.example.car.Samochod;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class HelloController {
+
+    private ArrayList<Samochod> carList = new ArrayList<>();
+
     @FXML
     private TextField biegTextField;
     @FXML
@@ -58,69 +67,107 @@ public class HelloController {
     private void onStart(ActionEvent actionEvent) {
         this.currentCar.wlacz();
         this.updateView();
+        refresh();
     }
 
     @FXML
     private void onTurnOff(ActionEvent actionEvent) {
         this.currentCar.wylacz();
         this.updateView();
+        refresh();
     }
 
     @FXML
     private void GearUp(ActionEvent actionEvent) {
         this.currentCar.zwiekszBieg();
         this.updateView();
+        refresh();
     }
 
     @FXML
     private void GearDown(ActionEvent actionEvent) {
         this.currentCar.zmniejszBieg();
         this.updateView();
+        refresh();
     }
 
     @FXML
     private void SpeedUp(ActionEvent actionEvent) {
         System.out.println("Speeding up");
+        refresh();
     }
 
     @FXML
     private void SlowDown(ActionEvent actionEvent) {
         System.out.println("Slowing down");
+        refresh();
     }
 
     @FXML
     private void Press(ActionEvent actionEvent) {
         System.out.println("Pressing up");
+        refresh();
     }
 
     @FXML
     private void EaseDown(ActionEvent actionEvent) {
         System.out.println("Easing down");
+        refresh();
     }
 
     @FXML
-    private void AddingCar(ActionEvent actionEvent) {
-        System.out.println("Adding new car");
+    private void AddingCar(Samochod car) {
+        this.carSelectorCombo.getItems().add(car);
+        refresh();
+
     }
 
     @FXML
     private void DeletinCar(ActionEvent actionEvent) {
         System.out.println("Deleting a car");
+        refresh();
     }
 
     @FXML
     private void initialize(){
 
-        Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300);
+        Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300, 2, 0);
         this.currentCar = car;
 
         this.carSelectorCombo.getItems().add(car);
 
         this.updateView();
+
+        Image carImage = new Image(getClass().getResource("/car-icon.png").toExternalForm());
+        System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
+        carImageView.setImage(carImage);
+
+        carImageView.setFitWidth(200);
+        carImageView.setFitHeight(100);
+
+        carImageView.setTranslateX(0);
+        carImageView.setTranslateY(0);
+
     }
 
     private void updateView(){
         this.biegTextField.setText(String.valueOf(this.currentCar.getBieg()));
 
     }
+
+    private void refresh(){
+        wagaField.setText(String.valueOf(currentCar.getWaga()));
+        regField.setText(currentCar.getReg());
+        predkoscField.setText(String.valueOf(currentCar.getSpeed()));
+        modelField.setText(currentCar.getModel());
+    }
+
+    private void openAddCarWindow() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("addCar.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.setTitle("Dodaj nowy samochów");
+        stage.show();
+    }
+
 }
