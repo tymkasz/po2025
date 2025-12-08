@@ -3,6 +3,7 @@ package org.example.cargui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -19,8 +20,6 @@ public class HelloController {
 
     private ArrayList<Samochod> carList = new ArrayList<>();
 
-    @FXML
-    private TextField biegTextField;
     @FXML
     private Button EaseDown;
     @FXML
@@ -44,6 +43,8 @@ public class HelloController {
     @FXML
     private Button DeletingCar;
     @FXML
+    public TextField producentField;
+    @FXML
     private TextField modelField;
     @FXML
     private TextField regField;
@@ -57,6 +58,16 @@ public class HelloController {
     private Samochod currentCar;
     @FXML
     private Label welcomeText;
+    @FXML
+    private TextField nazwaSkrzyniaField;
+    @FXML
+    private TextField cenaSkrzyniaField;
+    @FXML
+    private TextField wagaSkrzyniaField;
+    @FXML
+    private TextField biegTextField;
+
+
 
     @FXML
     protected void onHelloButtonClick() {
@@ -66,28 +77,24 @@ public class HelloController {
     @FXML
     private void onStart(ActionEvent actionEvent) {
         this.currentCar.wlacz();
-        this.updateView();
         refresh();
     }
 
     @FXML
     private void onTurnOff(ActionEvent actionEvent) {
         this.currentCar.wylacz();
-        this.updateView();
         refresh();
     }
 
     @FXML
     private void GearUp(ActionEvent actionEvent) {
         this.currentCar.zwiekszBieg();
-        this.updateView();
         refresh();
     }
 
     @FXML
     private void GearDown(ActionEvent actionEvent) {
         this.currentCar.zmniejszBieg();
-        this.updateView();
         refresh();
     }
 
@@ -116,14 +123,7 @@ public class HelloController {
     }
 
     @FXML
-    private void AddingCar(Samochod car) {
-        this.carSelectorCombo.getItems().add(car);
-        refresh();
-
-    }
-
-    @FXML
-    private void DeletinCar(ActionEvent actionEvent) {
+    private void DeletingCar(ActionEvent actionEvent) {
         System.out.println("Deleting a car");
         refresh();
     }
@@ -136,7 +136,6 @@ public class HelloController {
 
         this.carSelectorCombo.getItems().add(car);
 
-        this.updateView();
 
         Image carImage = new Image(getClass().getResource("/car-icon.png").toExternalForm());
         System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
@@ -148,26 +147,61 @@ public class HelloController {
         carImageView.setTranslateX(0);
         carImageView.setTranslateY(0);
 
-    }
-
-    private void updateView(){
-        this.biegTextField.setText(String.valueOf(this.currentCar.getBieg()));
+        this.refresh();
 
     }
 
-    private void refresh(){
+    private void refresh()
+    {
+        producentField.setText(String.valueOf(currentCar.getProducent()));
         wagaField.setText(String.valueOf(currentCar.getWaga()));
         regField.setText(currentCar.getReg());
         predkoscField.setText(String.valueOf(currentCar.getSpeed()));
         modelField.setText(currentCar.getModel());
+
+        nazwaSkrzyniaField.setText(this.currentCar.getSkrzynia().getModel());
     }
 
-    private void openAddCarWindow() throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("addCar.fxml"));
-        Stage stage = new Stage();
-        stage.setScene(new Scene(loader.load()));
-        stage.setTitle("Dodaj nowy samochów");
-        stage.show();
+    @FXML
+    private void onOpenAddCarWindow() throws IOException
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addCar.fxml"));
+            Parent root = loader.load();
+
+            AddCarController controller = loader.getController();
+            controller.setHelloController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Dodaj nowy samochód");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onDeletingCar()
+    {
+        Samochod selectedCar = carSelectorCombo.getSelectionModel().getSelectedItem();
+
+        if (selectedCar != null) {
+            // Usuń z listy
+            carSelectorCombo.getItems().remove(selectedCar);
+            System.out.println("Usunięto auto: " + selectedCar.getModel());
+        } else {
+            System.out.println("Nie wybrano auta do usunięcia.");
+        }
+    }
+
+    void AddingCar(Samochod car) {
+        // Dodanie auta do listy
+        this.carSelectorCombo.getItems().add(car);
+        // Wybór auta dodanego
+        carSelectorCombo.getSelectionModel().select(car);
+        this.refresh();
+
     }
 
 }
