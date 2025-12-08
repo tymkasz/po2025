@@ -1,8 +1,10 @@
 package org.example.cargui;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.example.car.Samochod;
 
 public class AddCarController {
     private HelloController helloController;
@@ -13,7 +15,9 @@ public class AddCarController {
     @FXML
     public TextField wagaChooseField;
     @FXML
-    public TextField predkoscChooseField;
+    public TextField maxSpeedChooseField;
+    @FXML
+    public TextField producentChooseField;
     @FXML
     public Button confirmButton;
     @FXML
@@ -22,27 +26,32 @@ public class AddCarController {
     public void setHelloController(HelloController helloController){
         this.helloController = helloController;
     }
+    @FXML
     private void onConfirmButton(){
+        String producent = producentChooseField.getText();
         String model = modelChooseField.getText();
         String registration = regChooseField.getText();
-        double weight;
-        int speed;
 
         try {
-            weight = Double.parseDouble(wagaChooseField.getText());
+            int maxSpeed = Integer.parseInt(maxSpeedChooseField.getText());
+            int weight = Integer.parseInt(wagaChooseField.getText());
+
+            Samochod car = new Samochod(registration, producent, model, maxSpeed, weight, 0);
+
+            helloController.AddingCar(car);
+            Stage stage = (Stage) confirmButton.getScene().getWindow();
+            stage.close();
+
         } catch (NumberFormatException e) {
             System.out.println("Niepoprawne dane. Spróbuj ponownie.");
         }
 
-        helloController.AddingCar(model, registration, weight, speed);
-        Stage stage = (Stage) confirmButton.getScene().getWindow();
-        stage.close();
-    }
 
+    }
+    @FXML
     private void onCancelButton(){
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
-
 
 }
