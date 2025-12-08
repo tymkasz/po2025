@@ -4,31 +4,37 @@ public class Samochod
 {
     private Silnik silnik;
     private SkrzyniaBiegow skrzynia;
+    private Sprzeglo sprzeglo;
     private Pozycja aktualnaPozycja;
 
     private boolean stanWlaczenia;
-    private String nrRejestr;
+    private final String nrRejestr;
     private String model;
     private String producent;
     private final int maxSpeed;
+    private int waga;
+    private int speed;
 
-    public Samochod(String nrRejestr, String producent, String model, int maxSpeed)
+    public Samochod(String nrRejestr, String producent, String model, int maxSpeed, int waga, int speed)
     {
         // Konstruktor osobny do tworzenia testowego silnika i skrzyni
         // Parametry przekazywane są z pierwszego konstruktora
         Silnik silnik = new Silnik("test", "test", 4000);
         SkrzyniaBiegow skrzynia = new SkrzyniaBiegow("test", "test", 5);
+        Sprzeglo sprzeglo = new Sprzeglo("test", "test");
 
         // Wywołanie innego konstruktora (przeciążenie)
-        this(silnik, skrzynia, nrRejestr, producent, model, maxSpeed);
+        this(silnik, skrzynia, nrRejestr, producent, model, maxSpeed, waga, speed, sprzeglo);
     }
 
-    public Samochod(Silnik silnik, SkrzyniaBiegow skrzynia, String nrRejestr, String producent, String model, int maxSpeed)
+    public Samochod(Silnik silnik, SkrzyniaBiegow skrzynia, String nrRejestr, String producent, String model, int maxSpeed, int waga, int speed, Sprzeglo sprzeglo)
     {
         this.nrRejestr = nrRejestr;
         this.producent = producent;
         this.model = model;
         this.maxSpeed = maxSpeed;
+        this.waga = waga;
+        this.speed = speed;
 
         this.stanWlaczenia = false;
 
@@ -36,6 +42,7 @@ public class Samochod
 
         this.silnik = silnik;
         this.skrzynia = skrzynia;
+        this.sprzeglo = sprzeglo;
     }
 
     public void wlacz()
@@ -74,11 +81,47 @@ public class Samochod
     }
 
     public String toString(){
-        return "Toyota";
+        return producent + " " + model + " (" + nrRejestr + ")";
     }
 
     public int getBieg(){
         return this.skrzynia.getAktualnyBieg();
+    }
+
+    public String getProducent()
+    {
+        return this.producent;
+    }
+
+    public String getReg(){
+        return this.nrRejestr;
+    }
+
+    public int getWaga(){
+        return this.waga;
+    }
+
+    public int getSpeed(){
+        return this.speed;
+    }
+
+    public String getModel(){
+        return this.model;
+    }
+
+    public Silnik getSilnik()
+    {
+        return this.silnik;
+    }
+
+    public SkrzyniaBiegow getSkrzynia()
+    {
+        return this.skrzynia;
+    }
+
+    public boolean getIsSprzegloPressed()
+    {
+        return this.sprzeglo.isPressed();
     }
 
 }
