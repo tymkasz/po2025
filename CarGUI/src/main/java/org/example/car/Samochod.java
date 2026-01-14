@@ -17,14 +17,17 @@ public class Samochod
 
     public Samochod(String nrRejestr, String producent, String model, int maxSpeed, int waga, int speed)
     {
-        // Konstruktor osobny do tworzenia testowego silnika i skrzyni
-        // Parametry przekazywane są z pierwszego konstruktora
-        Silnik silnik = new Silnik("test", "test", 4000);
-        SkrzyniaBiegow skrzynia = new SkrzyniaBiegow("test", "test", 5);
-        Sprzeglo sprzeglo = new Sprzeglo("test", "test");
-
-        // Wywołanie innego konstruktora (przeciążenie)
-        this(silnik, skrzynia, nrRejestr, producent, model, maxSpeed, waga, speed, sprzeglo);
+        this(
+                new Silnik("test", "test", 4000),     // silnik
+                new SkrzyniaBiegow("test", "test", 5), // skrzynia
+                nrRejestr,
+                producent,
+                model,
+                maxSpeed,
+                waga,
+                speed,
+                new Sprzeglo("test", "test")          // sprzeglo
+        );
     }
 
     public Samochod(Silnik silnik, SkrzyniaBiegow skrzynia, String nrRejestr, String producent, String model, int maxSpeed, int waga, int speed, Sprzeglo sprzeglo)
@@ -122,6 +125,11 @@ public class Samochod
     public boolean getIsSprzegloPressed()
     {
         return this.sprzeglo.isPressed();
+    }
+
+    public Sprzeglo getSprzeglo()
+    {
+        return this.sprzeglo;
     }
 
 }
