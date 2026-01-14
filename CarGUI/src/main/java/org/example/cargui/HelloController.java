@@ -66,6 +66,10 @@ public class HelloController {
     private TextField wagaSkrzyniaField;
     @FXML
     private TextField biegTextField;
+    @FXML
+    private TextField obrotyField;
+    @FXML
+    private TextField sprzegloStanField;
 
 
 
@@ -99,26 +103,8 @@ public class HelloController {
     }
 
     @FXML
-    private void SpeedUp(ActionEvent actionEvent) {
-        System.out.println("Speeding up");
-        refresh();
-    }
-
-    @FXML
     private void SlowDown(ActionEvent actionEvent) {
         System.out.println("Slowing down");
-        refresh();
-    }
-
-    @FXML
-    private void Press(ActionEvent actionEvent) {
-        System.out.println("Pressing up");
-        refresh();
-    }
-
-    @FXML
-    private void EaseDown(ActionEvent actionEvent) {
-        System.out.println("Easing down");
         refresh();
     }
 
@@ -136,6 +122,14 @@ public class HelloController {
 
         this.carSelectorCombo.getItems().add(car);
 
+        this.carSelectorCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                this.currentCar = newValue; // Podmiana obiektu na ten wybrany z listy
+                refresh();                  // Aktualizacja pól tekstowych
+                System.out.println("Przełączono na auto: " + newValue.getModel());
+            }
+        });
+
 
         Image carImage = new Image(getClass().getResource("/car-icon.png").toExternalForm());
         System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
@@ -149,17 +143,6 @@ public class HelloController {
 
         this.refresh();
 
-    }
-
-    private void refresh()
-    {
-        producentField.setText(String.valueOf(currentCar.getProducent()));
-        wagaField.setText(String.valueOf(currentCar.getWaga()));
-        regField.setText(currentCar.getReg());
-        predkoscField.setText(String.valueOf(currentCar.getSpeed()));
-        modelField.setText(currentCar.getModel());
-
-        nazwaSkrzyniaField.setText(this.currentCar.getSkrzynia().getModel());
     }
 
     @FXML
@@ -201,6 +184,53 @@ public class HelloController {
         // Wybór auta dodanego
         carSelectorCombo.getSelectionModel().select(car);
         this.refresh();
+
+    }
+
+    @FXML
+    private void Press(ActionEvent actionEvent) {
+        // Musisz mieć getter getSprzeglo() w klasie Samochod!
+        // Oraz metodę wcisnij() w klasie Sprzeglo
+        if(this.currentCar.getSprzeglo() != null) {
+            this.currentCar.getSprzeglo().wcisnij();
+            refresh();
+        }
+    }
+
+    @FXML
+    private void EaseDown(ActionEvent actionEvent) {
+        if(this.currentCar.getSprzeglo() != null) {
+            this.currentCar.getSprzeglo().zwolnij();
+            refresh();
+        }
+    }
+
+    @FXML
+    private void SpeedUp(ActionEvent actionEvent) {
+        // Tutaj przydałaby się metoda w Silniku np. zwiekszObroty()
+        // this.currentCar.getSilnik().zwiekszObroty();
+        System.out.println("Dodano gazu");
+        refresh();
+    }
+
+    private void refresh() {
+        // Podstawowe dane
+        producentField.setText(currentCar.getProducent());
+        modelField.setText(currentCar.getModel());
+        regField.setText(currentCar.getReg());
+        wagaField.setText(String.valueOf(currentCar.getWaga()));
+        predkoscField.setText(String.valueOf(currentCar.getSpeed()));
+
+        // Komponenty
+        if (currentCar.getSkrzynia() != null) {
+            nazwaSkrzyniaField.setText(currentCar.getSkrzynia().getModel());
+            biegTextField.setText(String.valueOf(currentCar.getSkrzynia().getAktualnyBieg()));
+        }
+
+        if (currentCar.getSilnik() != null) {
+            // Upewnij się, że masz metodę getObroty() w Silniku
+            obrotyField.setText(String.valueOf(currentCar.getSilnik().getObroty()));
+        }
 
     }
 
