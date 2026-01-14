@@ -2,7 +2,7 @@ package org.example.car;
 
 public class test
 {
-    static void main(String[] args)
+    public static void main(String[] args)
     {
         SkrzyniaBiegow skrzynia = new SkrzyniaBiegow("test", "test", 7);
         Silnik silnik = new Silnik("Subaru", "FA20", 4500);
