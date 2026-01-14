@@ -46,8 +46,8 @@
                     <items>
                         <Label text="Samochód: "/>
                         <ComboBox fx:id="carSelectorCombo" promptText="Wybierz samochód"/>
-                        <Button fx:id="AddingNew" text="Dodaj nowy" onAction="#AddingCar"/>
-                        <Button fx:id="DeletingCar" text="Usuń" onAction="#DeletinCar"/>
+                        <Button fx:id="AddingNew" text="Dodaj nowy" onAction="#onOpenAddCarWindow"/>
+                        <Button fx:id="DeletingCar" text="Usuń" onAction="#onDeletingCar"/>
                     </items>
                 </ToolBar>
             </children>
@@ -67,19 +67,22 @@
                                 <Insets top="10" left="10" bottom="10" right="10"/>
                             </padding>
                             <children>
-                                <Label text="Model" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <TextField fx:id="modelField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+                                <Label text="Producent" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <TextField fx:id="producentField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
 
-                                <Label text="Nr rejestracyjny" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <TextField fx:id="regField" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+                                <Label text="Model" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField fx:id="modelField" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
 
-                                <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <TextField fx:id="wagaField" GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+                                <Label text="Nr rejestracyjny" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField fx:id="regField" GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
 
-                                <Label text="Prędkość" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                                <TextField fx:id="predkoscField" GridPane.rowIndex="3" GridPane.columnIndex="1" editable="false"/>
+                                <Label text="Waga" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <TextField fx:id="wagaField" GridPane.rowIndex="3" GridPane.columnIndex="1" editable="false"/>
 
-                                <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                <Label text="Prędkość" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                <TextField fx:id="predkoscField" GridPane.rowIndex="4" GridPane.columnIndex="1" editable="false"/>
+
+                                <HBox spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="1">
                                     <Button fx:id="StartButton" text="Włącz" onAction="#onStart"/>
                                     <Button fx:id="TurnOffButton" text="Wyłącz" onAction="#onTurnOff"/>
                                 </HBox>
@@ -96,13 +99,17 @@
                             </padding>
                             <children>
                                 <Label text="Nazwa" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="nazwaSkrzyniaField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Cena" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="cenaSkrzyniaField" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="wagaSkrzyniaField" GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Bieg" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                 <TextField fx:id="biegTextField" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
                                 <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
                                     <Button fx:id="GearUp" text="Zwiększ bieg" onAction="#GearUp"/>
                                     <Button fx:id="GearDown" text="Zmniejsz bieg" onAction="#GearDown"/>

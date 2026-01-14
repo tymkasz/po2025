@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.cargui.AddCarController">
+
+    <padding>
+        <Insets top="5" left="5" bottom="5" right="5"/>
+    </padding>
+    <children>
+        <TitledPane animated="false" text="Samochód" collapsible="false">
+            <content>
+                <GridPane hgap="10" vgap="10">
+                    <padding>
+                        <Insets top="10" left="10" bottom="10" right="10"/>
+                    </padding>
+                    <children>
+                        <Label text="Producent" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <TextField fx:id="producentChooseField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Model" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="modelChooseField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Nr rejestracyjny" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <TextField fx:id="regChooseField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Waga" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <TextField fx:id="wagaChooseField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                        <Label text="Maksymalna prędkość" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <TextField fx:id="maxSpeedChooseField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                        <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                            <Button fx:id="confirmButton" text="Potwierdź" onAction="#onConfirmButton"/>
+                            <Button fx:id="cancelButton" text="Odrzuć" onAction="#onCancelButton"/>
+                        </HBox>
+                    </children>
+                </GridPane>
+            </content>
+        </TitledPane>
+    </children>
+
+</VBox>

@@ -1,4 +1,4 @@
-package org.example.car;
+package symulator;
 
 public class test
 {
@@ -6,8 +6,7 @@ public class test
     {
         SkrzyniaBiegow skrzynia = new SkrzyniaBiegow("test", "test", 7);
         Silnik silnik = new Silnik("Subaru", "FA20", 4500);
-        Sprzeglo sprzeglo = new Sprzeglo("test", "test");
-        Samochod car = new Samochod(silnik, skrzynia, "KR4286", "Toyota", "GT86", 400, 2, 0, sprzeglo);
+        Samochod car = new Samochod(silnik, skrzynia, "KR4286", "Toyota", "GT86", 400);
 
         car.wlacz();
         car.zwiekszBieg();
