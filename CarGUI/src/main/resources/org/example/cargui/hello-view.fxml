@@ -132,6 +132,7 @@
                                 <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
                                 <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                                 <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+                                <Label text="Obroty" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                 <TextField fx:id="obrotyField" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
                                 <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
                                     <Button fx:id="SpeedUp" text="Dodaj gazu" onAction="#SpeedUp"/>
@@ -155,6 +156,7 @@
                                 <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
                                 <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                                 <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+                                <Label text="Stan" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                 <TextField fx:id="sprzegloStanField" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
                                 <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
                                     <Button fx:id="Press" text="Naciśnij" onAction="#Press"/>
