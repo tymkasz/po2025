@@ -36,7 +36,7 @@ public class AddCarController {
             int maxSpeed = Integer.parseInt(maxSpeedChooseField.getText());
             int weight = Integer.parseInt(wagaChooseField.getText());
 
-            Samochod car = new Samochod(registration, producent, model, maxSpeed, weight, 0);
+            Samochod car = new Samochod(registration, producent, model, maxSpeed, weight);
 
             helloController.AddingCar(car);
             Stage stage = (Stage) confirmButton.getScene().getWindow();
