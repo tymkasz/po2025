@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import org.example.car.Samochod;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.animation.AnimationTimer;
 
 public class CarSimulatorController {
 
@@ -70,6 +71,8 @@ public class CarSimulatorController {
     private TextField obrotyField;
     @FXML
     private TextField sprzegloStanField;
+
+    private AnimationTimer timer;
 
 
 
@@ -136,6 +139,8 @@ public class CarSimulatorController {
         carImageView.setTranslateY(0);
 
         this.refresh();
+
+        startTimer();
 
     }
 
@@ -243,6 +248,34 @@ public class CarSimulatorController {
             String stan = currentCar.getIsSprzegloPressed() ? "Wciśnięte" : "Zwolnione";
             sprzegloStanField.setText(stan);
         }
+    }
+
+    private void startTimer()
+    {
+        this.timer = new AnimationTimer() {
+            @Override
+            public void handle(long now)
+            {
+                // Logika ruchu
+                // wywołanie metody 60 hz
+                if (currentCar != null)
+                {
+                    // Pobranie prędkości
+                    double speed = currentCar.getSpeed();
+                    // Mały czynnik ruchu, aby auto nie poleciało w kosmos
+                    double moveFactor = 0.05;
+                    // getTranslateX aktualna pozycja
+                    double newPosition = carImageView.getTranslateX() + (speed * moveFactor);
+                    // Ustawienie pozycji
+                    carImageView.setTranslateX(newPosition);
+
+                    // Jeśli auto wyjedzie poza mapę
+                    if (carImageView.getTranslateX() > 800) { carImageView.setTranslateX(-100); }
+                }
+            }
+        };
+
+        this.timer.start();
 
     }
 
