@@ -6,6 +6,7 @@ public class Sprzeglo extends Komponent
 
     public Sprzeglo(String producent, String model)
     {
+        // super() -> Wywołanie Komponent -> rodzica
         super(producent, model);
     }
 
