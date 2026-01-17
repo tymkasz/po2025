@@ -117,7 +117,7 @@ public class HelloController {
     @FXML
     private void initialize(){
 
-        Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300, 2, 0);
+        Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300, 2);
         this.currentCar = car;
 
         this.carSelectorCombo.getItems().add(car);
