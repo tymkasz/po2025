@@ -79,7 +79,14 @@ public class Samochod
 
     public void zmniejszBieg()
     {
-        this.skrzynia.zmniejszBieg();
+        // Zabezpieczenie sprzęgłem
+        if (this.sprzeglo.isPressed())
+        {
+            this.skrzynia.zmniejszBieg();
+        } else
+        {
+            System.out.println("Wciśnij sprzęgło, aby zmienić bieg!");
+        }
     }
 
     public void updatePosition()
