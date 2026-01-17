@@ -13,31 +13,28 @@ public class Samochod
     private String producent;
     private final int maxSpeed;
     private int waga;
-    private int speed;
 
-    public Samochod(String nrRejestr, String producent, String model, int maxSpeed, int waga, int speed)
+    public Samochod(String nrRejestr, String producent, String model, int maxSpeed, int waga)
     {
         this(
-                new Silnik("test", "test", 4000),     // silnik
-                new SkrzyniaBiegow("test", "test", 5), // skrzynia
+                new Silnik("Toyota", "Boxer", 7000),     // silnik
+                new SkrzyniaBiegow("Aisin", "Manual", 7), // skrzynia
                 nrRejestr,
                 producent,
                 model,
                 maxSpeed,
                 waga,
-                speed,
-                new Sprzeglo("test", "test")          // sprzeglo
+                new Sprzeglo("Exedy", "Stage1")          // sprzeglo
         );
     }
 
-    public Samochod(Silnik silnik, SkrzyniaBiegow skrzynia, String nrRejestr, String producent, String model, int maxSpeed, int waga, int speed, Sprzeglo sprzeglo)
+    public Samochod(Silnik silnik, SkrzyniaBiegow skrzynia, String nrRejestr, String producent, String model, int maxSpeed, int waga, Sprzeglo sprzeglo)
     {
         this.nrRejestr = nrRejestr;
         this.producent = producent;
         this.model = model;
         this.maxSpeed = maxSpeed;
         this.waga = waga;
-        this.speed = speed;
 
         this.stanWlaczenia = false;
 
