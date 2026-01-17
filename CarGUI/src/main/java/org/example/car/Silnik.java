@@ -8,6 +8,7 @@ public class Silnik extends Komponent
 
     public Silnik(String producent, String model, int maxObroty)
     {
+        // super() -> Wywołanie Komponent -> rodzica
         super(producent, model);
 
         // Ustawienie max obrotów na maxObroty wprowadzone w konstruktorze
