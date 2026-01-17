@@ -2,17 +2,17 @@ package org.example.car;
 
 public class Samochod
 {
-    private Silnik silnik;
-    private SkrzyniaBiegow skrzynia;
-    private Sprzeglo sprzeglo;
-    private Pozycja aktualnaPozycja;
+    private final Silnik silnik;
+    private final SkrzyniaBiegow skrzynia;
+    private final Sprzeglo sprzeglo;
+    private final Pozycja aktualnaPozycja;
 
     private boolean stanWlaczenia;
     private final String nrRejestr;
-    private String model;
-    private String producent;
+    private final String model;
+    private final String producent;
     private final int maxSpeed;
-    private int waga;
+    private final int waga;
 
     public Samochod(String nrRejestr, String producent, String model, int maxSpeed, int waga)
     {
@@ -45,6 +45,7 @@ public class Samochod
         this.sprzeglo = sprzeglo;
     }
 
+    // Metoda do włączenia auta
     public void wlacz()
     {
         this.silnik.uruchom();
@@ -52,11 +53,12 @@ public class Samochod
         System.out.println("Samochód włączony");
     }
 
+    // Metoda do wyłączenia auta
     public void wylacz()
     {
         this.silnik.zatrzymaj();
 
-        while (this.skrzynia.getAktualnyBieg() > 0)
+        while (this.getAktualnyBieg() > 0)
         {
             this.skrzynia.zmniejszBieg();
         }
@@ -65,10 +67,11 @@ public class Samochod
         System.out.println("Samochód wyłączony");
     }
 
+    // Metoda do zwiększenia biegu
     public void zwiekszBieg()
     {
         // Zabezpieczenie sprzęgłem
-        if (this.sprzeglo.isPressed())
+        if (this.getIsSprzegloPressed())
         {
             this.skrzynia.zwiekszBieg();
         } else
@@ -77,10 +80,11 @@ public class Samochod
         }
     }
 
+    // Metoda do zmniejszenia biegu
     public void zmniejszBieg()
     {
         // Zabezpieczenie sprzęgłem
-        if (this.sprzeglo.isPressed())
+        if (this.getIsSprzegloPressed())
         {
             this.skrzynia.zmniejszBieg();
         } else
@@ -89,58 +93,33 @@ public class Samochod
         }
     }
 
-    public void updatePosition()
+    // Metoda do obliczenia prędkości
+    public int getSpeed()
     {
-        this.aktualnaPozycja.updatePosition(9, 5);
+        // Dynamiczne obliczanie prędkości
+        // Auto jest na luzie
+        if (this.getAktualnyBieg() == 0) return 0;
+
+        // Wzór Prędkość = (Obroty * Bieg)/Stała -> Stała "na oko"
+        int calculateSpeed = (this.silnik.getObroty() * this.getAktualnyBieg())/80;
+
+        // Jeśli obliczona prędkość > maxSpeed -> ustaw maxSpeed
+        if (calculateSpeed >= this.maxSpeed) return this.maxSpeed;
+
+        return calculateSpeed;
     }
 
-    public String toString(){
-        return producent + " " + model + " (" + nrRejestr + ")";
-    }
-
-    public int getBieg(){
-        return this.skrzynia.getAktualnyBieg();
-    }
-
-    public String getProducent()
-    {
-        return this.producent;
-    }
-
-    public String getReg(){
-        return this.nrRejestr;
-    }
-
-    public int getWaga(){
-        return this.waga;
-    }
-
-    public int getSpeed(){
-        return this.speed;
-    }
-
-    public String getModel(){
-        return this.model;
-    }
-
-    public Silnik getSilnik()
-    {
-        return this.silnik;
-    }
-
-    public SkrzyniaBiegow getSkrzynia()
-    {
-        return this.skrzynia;
-    }
-
-    public boolean getIsSprzegloPressed()
-    {
-        return this.sprzeglo.isPressed();
-    }
-
-    public Sprzeglo getSprzeglo()
-    {
-        return this.sprzeglo;
-    }
+    // Gettery
+    public void updatePosition() { this.aktualnaPozycja.updatePosition(9, 5); }
+    public String toString() { return producent + " " + model + " (" + nrRejestr + ")"; }
+    public String getProducent() { return this.producent; }
+    public String getReg() { return this.nrRejestr; }
+    public int getWaga() { return this.waga; }
+    public int getAktualnyBieg() { return this.skrzynia.getAktualnyBieg(); }
+    public String getModel() { return this.model; }
+    public Silnik getSilnik() { return this.silnik; }
+    public SkrzyniaBiegow getSkrzynia() { return this.skrzynia; }
+    public boolean getIsSprzegloPressed() { return this.sprzeglo.isPressed(); }
+    public Sprzeglo getSprzeglo() { return this.sprzeglo; }
 
 }
