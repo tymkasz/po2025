@@ -16,7 +16,7 @@ import org.example.car.Samochod;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HelloController {
+public class CarSimulatorController {
 
     private ArrayList<Samochod> carList = new ArrayList<>();
 
@@ -103,12 +103,6 @@ public class HelloController {
     }
 
     @FXML
-    private void SlowDown(ActionEvent actionEvent) {
-        System.out.println("Slowing down");
-        refresh();
-    }
-
-    @FXML
     private void DeletingCar(ActionEvent actionEvent) {
         System.out.println("Deleting a car");
         refresh();
@@ -188,7 +182,8 @@ public class HelloController {
     }
 
     @FXML
-    private void Press(ActionEvent actionEvent) {
+    private void Press(ActionEvent actionEvent)
+    {
         // Musisz mieć getter getSprzeglo() w klasie Samochod!
         // Oraz metodę wcisnij() w klasie Sprzeglo
         if(this.currentCar.getSprzeglo() != null) {
@@ -198,7 +193,8 @@ public class HelloController {
     }
 
     @FXML
-    private void EaseDown(ActionEvent actionEvent) {
+    private void EaseDown(ActionEvent actionEvent)
+    {
         if(this.currentCar.getSprzeglo() != null) {
             this.currentCar.getSprzeglo().zwolnij();
             refresh();
@@ -206,10 +202,18 @@ public class HelloController {
     }
 
     @FXML
-    private void SpeedUp(ActionEvent actionEvent) {
-        // Tutaj przydałaby się metoda w Silniku np. zwiekszObroty()
-        // this.currentCar.getSilnik().zwiekszObroty();
+    private void SpeedUp(ActionEvent actionEvent)
+    {
+        if (currentCar.getSilnik() != null) { currentCar.getSilnik().zwiekszObroty(400); }
         System.out.println("Dodano gazu");
+        refresh();
+    }
+
+    @FXML
+    private void SlowDown(ActionEvent actionEvent)
+    {
+        if (currentCar.getSilnik() != null) { currentCar.getSilnik().zmniejszObroty(400); }
+        System.out.println("Odjęto gazu");
         refresh();
     }
 
