@@ -67,7 +67,14 @@ public class Samochod
 
     public void zwiekszBieg()
     {
-        this.skrzynia.zwiekszBieg();
+        // Zabezpieczenie sprzęgłem
+        if (this.sprzeglo.isPressed())
+        {
+            this.skrzynia.zwiekszBieg();
+        } else
+        {
+            System.out.println("Wciśnij sprzęgło, aby zmienić bieg!");
+        }
     }
 
     public void zmniejszBieg()
