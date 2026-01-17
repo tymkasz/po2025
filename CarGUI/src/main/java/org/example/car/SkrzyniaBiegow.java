@@ -3,10 +3,11 @@ package org.example.car;
 public class SkrzyniaBiegow extends Komponent
 {
     private int aktualnyBieg;
-    private int iloscBiegow;
+    private final int iloscBiegow;
 
     public SkrzyniaBiegow(String producent, String model, int iloscBiegow)
     {
+        // super() -> Wywołanie Komponent -> rodzica
         super(producent, model);
 
         // Ustawienie ilości biegów obiektu na iloscBiegow z konstruktora
@@ -15,27 +16,33 @@ public class SkrzyniaBiegow extends Komponent
 
     public void zwiekszBieg()
     {
-        if (this.aktualnyBieg < this.iloscBiegow)
+        if (this.aktualnyBieg == -1)
+        {
+            this.aktualnyBieg = 0;
+            System.out.println("Luz (N)");
+        } else if (this.aktualnyBieg < this.iloscBiegow)
         {
             this.aktualnyBieg++;
         } else
         {
-            System.out.println("Nie można zwiększyć biegu");
+            System.out.println("Nie można zwiększyć biegu (MAX)");
         }
+
     }
 
     public void zmniejszBieg()
     {
-        if (this.aktualnyBieg > 0)
+        if (this.aktualnyBieg == 0)
+        {
+            this.aktualnyBieg = -1;
+            System.out.println("Bieg wsteczny (R)");
+        } else if (this.aktualnyBieg > 0)
         {
             this.aktualnyBieg--;
             if (this.aktualnyBieg == 0)
             {
-                System.out.println("Luz");
+                System.out.println("Luz (N)");
             }
-        } else
-        {
-            System.out.println("Nie można zmniejszyć biegu");
         }
     }
 
