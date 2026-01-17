@@ -5,6 +5,7 @@ public class Pozycja
     double x;
     double y;
 
+    // Przeciążenie -> dwa konstruktory (obiekty) w zależności od potrzeb użytkownika
     // Konstruktor domyslny -> domyślna pozycja x=0.0 i y=0.0
     public Pozycja()
     {
