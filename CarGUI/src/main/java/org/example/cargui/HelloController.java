@@ -222,14 +222,22 @@ public class HelloController {
         predkoscField.setText(String.valueOf(currentCar.getSpeed()));
 
         // Komponenty
-        if (currentCar.getSkrzynia() != null) {
+        if (currentCar.getSkrzynia() != null)
+        {
             nazwaSkrzyniaField.setText(currentCar.getSkrzynia().getModel());
-            biegTextField.setText(String.valueOf(currentCar.getSkrzynia().getAktualnyBieg()));
+            biegTextField.setText(String.valueOf(currentCar.getAktualnyBieg()));
         }
 
-        if (currentCar.getSilnik() != null) {
+        if (currentCar.getSilnik() != null)
+        {
             // Upewnij się, że masz metodę getObroty() w Silniku
             obrotyField.setText(String.valueOf(currentCar.getSilnik().getObroty()));
+        }
+
+        if (currentCar.getSprzeglo() != null)
+        {
+            String stan = currentCar.getIsSprzegloPressed() ? "Wciśnięte" : "Zwolnione";
+            sprzegloStanField.setText(stan);
         }
 
     }
