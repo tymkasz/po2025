@@ -1,5 +1,4 @@
 package org.example.cargui;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -7,7 +6,7 @@ import javafx.stage.Stage;
 import org.example.car.Samochod;
 
 public class AddCarController {
-    private HelloController helloController;
+    private CarSimulatorController carSimulatorController;
     @FXML
     public TextField modelChooseField;
     @FXML
@@ -23,8 +22,8 @@ public class AddCarController {
     @FXML
     public Button cancelButton;
 
-    public void setHelloController(HelloController helloController){
-        this.helloController = helloController;
+    public void setHelloController(CarSimulatorController carSimulatorController){
+        this.carSimulatorController = carSimulatorController;
     }
     @FXML
     private void onConfirmButton(){
@@ -38,7 +37,7 @@ public class AddCarController {
 
             Samochod car = new Samochod(registration, producent, model, maxSpeed, weight);
 
-            helloController.AddingCar(car);
+            carSimulatorController.AddingCar(car);
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
 
