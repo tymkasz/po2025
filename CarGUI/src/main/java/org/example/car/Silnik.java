@@ -2,7 +2,7 @@ package org.example.car;
 
 public class Silnik extends Komponent
 {
-    private int maxObroty;
+    private final int maxObroty;
     private int obroty;
     private final int obrotyBegin = 800;
 
@@ -34,6 +34,38 @@ public class Silnik extends Komponent
     public int getObroty()
     {
         return this.obroty;
+    }
+
+    // Metoda do dodawania gazu
+    public void zwiekszObroty(int ilosc)
+    {
+        if (this.obroty + ilosc <= this.maxObroty)
+        {
+            this.obroty += ilosc;
+        }
+        else
+        {
+            // Ustaw max, jeśli przekroczymy obroty
+            this.obroty = this.maxObroty;
+            System.out.println("Osiągnięto maksymalne obroty");
+        }
+    }
+
+    // Metoda ujmowania gazu
+    public void zmniejszObroty(int ilosc)
+    {
+        if (this.obroty - ilosc >= this.obrotyBegin)
+        {
+            this.obroty -= ilosc;
+        }
+        else
+        {
+            // Schodzimy na minimalne obroty (obrotyBegin), aby auto samo nie zgasło
+            if (this.obroty > 0)
+            {
+                this.obroty = this.obrotyBegin;
+            }
+        }
     }
 
 
