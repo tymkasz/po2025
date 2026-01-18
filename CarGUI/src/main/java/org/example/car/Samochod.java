@@ -119,6 +119,8 @@ public class Samochod
         return calculateSpeed;
     }
 
+    public void hamuj() { this.silnik.hamuj(); }
+
     // Gettery
     public void updatePosition() { this.aktualnaPozycja.updatePosition(9, 5); }
     public String toString() { return producent + " " + model + " (" + nrRejestr + ")"; }
