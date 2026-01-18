@@ -211,8 +211,20 @@ public class CarSimulatorController {
     @FXML
     private void SpeedUp(ActionEvent actionEvent)
     {
-        if (currentCar.getSilnik() != null) { currentCar.getSilnik().zwiekszObroty(400); }
-        System.out.println("Dodano gazu");
+        if (currentCar == null ) return;
+
+        if (currentCar.czyWlaczony())
+        {
+            if (currentCar.getSilnik() != null)
+            {
+                currentCar.getSilnik().zwiekszObroty(400);
+                System.out.println("Dodano gazu");
+            }
+        } else
+        {
+            System.out.println("Najpierw włącz silnik");
+        }
+
         refresh();
     }
 
