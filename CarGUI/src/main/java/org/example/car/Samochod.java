@@ -96,6 +96,9 @@ public class Samochod
     // Metoda do obliczenia prędkości
     public int getSpeed()
     {
+        // Zabezpieczenie przed jazdą wyłączonym autem
+        if (!this.stanWlaczenia) return 0;
+
         // Dynamiczne obliczanie prędkości
         // Auto jest na luzie
         if (this.getAktualnyBieg() == 0) return 0;
