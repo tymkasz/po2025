@@ -124,5 +124,6 @@ public class Samochod
     public SkrzyniaBiegow getSkrzynia() { return this.skrzynia; }
     public boolean getIsSprzegloPressed() { return this.sprzeglo.isPressed(); }
     public Sprzeglo getSprzeglo() { return this.sprzeglo; }
+    public boolean czyWlaczony() { return this.stanWlaczenia; }
 
 }
