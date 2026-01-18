@@ -397,7 +397,17 @@ public class CarSimulatorController {
                     currentCar.getSilnik().zmniejszObroty(3);
                 }
                 // HAMULEC
-                if (isLeftPressed) { currentCar.hamuj(); }
+                if (isLeftPressed)
+                {
+                    currentCar.hamuj();
+
+                    // Jeśli wciśnięte sprzęgło
+                    if (currentCar.getIsSprzegloPressed())
+                    {
+                        currentVelocity -= 5;
+                        if (currentVelocity < 0) currentVelocity = 0;
+                    }
+                }
 
                 // Pobranie aktualnej prędkości (która wynika z obrotów ustawionych wyżej)
                 double engineTargetSpeed = currentCar.getSpeed();
@@ -411,7 +421,7 @@ public class CarSimulatorController {
                 {
                     // Sprzęgło WCIŚNIĘTE:
                     // Rozłączamy silnik! Auto toczy się siłą rozpędu, ale powoli zwalnia (tarcie)
-                    currentVelocity *= 0.99; // Zwalniamy o 1% co klatkę
+                    currentVelocity *= 0.998; // Zwalniamy o 1% co klatkę
 
                     if (currentVelocity < 0.1) currentVelocity = 0; // Zatrzymanie
                 }
