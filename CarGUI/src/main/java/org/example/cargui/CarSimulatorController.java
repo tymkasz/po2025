@@ -151,13 +151,34 @@ public class CarSimulatorController {
             if (newScene != null)
             {
                 newScene.setOnKeyPressed(event -> {
-                    switch (event.getCode()) {
+                    switch (event.getCode())
+                    {
                         case UP: isUpPressed = true; break;
                         case DOWN: isDownPressed = true; break;
                         case RIGHT: isRightPressed = true; break;
                         case LEFT: isLeftPressed = true; break;
                     }
                 });
+
+                newScene.setOnKeyReleased(event -> {
+                    switch (event.getCode())
+                    {
+                        case UP: isUpPressed = false; break;
+                        case DOWN: isDownPressed = false; break;
+                        case RIGHT: isRightPressed = false; break;
+                        case LEFT: isLeftPressed = false; break;
+                    }
+                });
+
+                // Główny panel aplikacji
+                Parent root = newScene.getRoot();
+                // Focus na roocie
+                root.setFocusTraversable(true);
+                // Gdy kliknięcie w tło -> focus na tło (zabranie z przycisków)
+                root.setOnMouseClicked(event -> root.requestFocus());
+                // Analogicznie dla obrazka auta
+                carImageView.setOnMouseClicked(event -> root.requestFocus());
+
             }
         });
 
@@ -338,45 +359,65 @@ public class CarSimulatorController {
         }
     }
 
-    private void startTimer()
-    {
+    private void startTimer() {
         this.timer = new AnimationTimer() {
             @Override
-            public void handle(long now)
-            {
-                // Logika ruchu
-                // wywołanie metody 60 hz
-                if (currentCar != null)
-                {
-                    if (isRightPressed && currentCar.czyWlaczony())
-                    {
-                        // Jeśli nie ma sprzęgła to dodajemy gazu
-                        if (!currentCar.getIsSprzegloPressed())
-                        {
-                            currentCar.getSilnik().zwiekszObroty(100); // Mniej niż przycisk
-                        } else
-                        {
-                            currentCar.getSilnik().zmniejszObroty(20); // Opór, jeśli nie trzymam gazu
-                        }
+            public void handle(long now) {
+                // Jeśli nie ma auta, nic nie rób
+                if (currentCar == null) return;
+
+                // Oś Y (Góra / Dół) - Zmiana pasa ruchu
+                // Działa zawsze, niezależnie od tego czy silnik włączony (można przepychać auto)
+                if (isUpPressed) {
+                    carImageView.setTranslateY(carImageView.getTranslateY() - 5);
+                }
+                if (isDownPressed) {
+                    carImageView.setTranslateY(carImageView.getTranslateY() + 5);
+                }
+
+                // Oś X (Gaz / Hamulec)
+                if (isRightPressed && currentCar.czyWlaczony()) {
+                    // GAZ: Jeśli sprzęgło puszczone -> rosną obroty
+                    if (!currentCar.getIsSprzegloPressed()) {
+                        // Dodajemy mniej niż przyciskiem
+                        currentCar.getSilnik().zwiekszObroty(50);
+                    } else {
+                        // Na sprzęgle "gazujemy" na pusto (obroty rosną szybciej)
+                        currentCar.getSilnik().zwiekszObroty(150);
                     }
+                } else {
+                    // PUSZCZENIE GAZU: Silnik powoli zwalnia (opór)
+                    currentCar.getSilnik().zmniejszObroty(10);
+                }
 
-                    // Pobranie prędkości
-                    double speed = currentCar.getSpeed();
-                    // Mały czynnik ruchu, aby auto nie poleciało w kosmos
-                    double moveFactor = 0.05;
-                    // getTranslateX aktualna pozycja
-                    double newPosition = carImageView.getTranslateX() + (speed * moveFactor);
-                    // Ustawienie pozycji
-                    carImageView.setTranslateX(newPosition);
+                if (isLeftPressed) {
+                    // HAMULEC
+                    currentCar.hamuj();
+                }
 
-                    // Jeśli auto wyjedzie poza mapę
-                    if (carImageView.getTranslateX() > 800) { carImageView.setTranslateX(-100); }
+                // Pobranie aktualnej prędkości (która wynika z obrotów ustawionych wyżej)
+                double speed = currentCar.getSpeed();
+
+                // Przesunięcie obrazka
+                double moveFactor = 0.05;
+                carImageView.setTranslateX(carImageView.getTranslateX() + (speed * moveFactor));
+
+                // Pętla mapy (teleportacja jak wyjedzie za ekran)
+                if (carImageView.getTranslateX() > 800) {
+                    carImageView.setTranslateX(-150);
+                }
+
+                // Aktualizacja interfejsu
+                // Bez tego liczby na ekranie by stały w miejscu!
+                refresh();
+
+                // Jeśli klawisze nie działają, to wymusza działanie na obrazku
+                if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
+                    carImageView.requestFocus();
                 }
             }
         };
-
         this.timer.start();
-
     }
 
 }
