@@ -97,7 +97,11 @@ public class Samochod
     public int getSpeed()
     {
         // Zabezpieczenie przed jazdą wyłączonym autem
-        if (!this.stanWlaczenia) return 0;
+        if (!this.stanWlaczenia)
+        {
+            System.out.println("Włącz auto przed jazdą!");
+            return 0;
+        }
 
         // Dynamiczne obliczanie prędkości
         // Auto jest na luzie
