@@ -93,7 +93,7 @@ public class Silnik extends Komponent
             // Jeśli silnik włączony i sprzęgło w górze,
             // to w realu auto by zgasło przy 0 obrotów,
             // ale na razie uprośćmy, że schodzi do 800.
-            if (this.obroty < 800 && this.obroty > 0) this.obroty = 800;
+            //if (this.obroty < 800 && this.obroty > 0) this.obroty = 800;
         }
     }
 
