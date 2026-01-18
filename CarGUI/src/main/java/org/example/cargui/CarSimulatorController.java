@@ -380,14 +380,22 @@ public class CarSimulatorController {
                     // GAZ: Jeśli sprzęgło puszczone -> rosną obroty
                     if (!currentCar.getIsSprzegloPressed()) {
                         // Dodajemy mniej niż przyciskiem
-                        currentCar.getSilnik().zwiekszObroty(50);
+                        int gear = currentCar.getAktualnyBieg();
+                        if (gear == 0) gear = 1;
+
+                        // Baza przyspieszenia to 15
+                        // Dzielimy przez numer biegu
+                        // Na 1 szybciej zbiera obroty niż np. na 5
+                        int acceleration = 15/gear;
+
+                        currentCar.getSilnik().zwiekszObroty(acceleration);
                     } else {
                         // Na sprzęgle "gazujemy" na pusto (obroty rosną szybciej)
                         currentCar.getSilnik().zwiekszObroty(150);
                     }
                 } else {
                     // PUSZCZENIE GAZU: Silnik powoli zwalnia (opór)
-                    currentCar.getSilnik().zmniejszObroty(10);
+                    currentCar.getSilnik().zmniejszObroty(3);
                 }
 
                 if (isLeftPressed) {
