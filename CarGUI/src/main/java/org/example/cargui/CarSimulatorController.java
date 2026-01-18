@@ -145,6 +145,22 @@ public class CarSimulatorController {
 
         this.refresh();
 
+        // Obsługa klawiszy strzałek
+        // Czekamy, aż scena zostanie załadowana, żeby podpiąć klawiaturę
+        carImageView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null)
+            {
+                newScene.setOnKeyPressed(event -> {
+                    switch (event.getCode()) {
+                        case UP: isUpPressed = true; break;
+                        case DOWN: isDownPressed = true; break;
+                        case RIGHT: isRightPressed = true; break;
+                        case LEFT: isLeftPressed = true; break;
+                    }
+                });
+            }
+        });
+
         startTimer();
 
     }
