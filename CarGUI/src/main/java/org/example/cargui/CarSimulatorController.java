@@ -114,9 +114,9 @@ public class CarSimulatorController {
     @FXML
     private void initialize(){
 
+        // Tworzenie auta i dodanie go do listy
+        // Nowo powstałe auto nie jest currentCar
         Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300, 2);
-        this.currentCar = car;
-
         this.carSelectorCombo.getItems().add(car);
 
         this.carSelectorCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -138,6 +138,8 @@ public class CarSimulatorController {
         carImageView.setTranslateX(0);
         carImageView.setTranslateY(0);
 
+        // Początkowe auto to null -> wybierz model lub wprowadź swój
+        this.currentCar = null;
         this.refresh();
 
         startTimer();
@@ -223,7 +225,24 @@ public class CarSimulatorController {
     }
 
     private void refresh() {
-        // Podstawowe dane
+
+        if (currentCar == null)
+        {
+            producentField.setText("");
+            producentField.setText("");
+            modelField.setText("");
+            regField.setText("");
+            wagaField.setText("");
+            predkoscField.setText("");
+            nazwaSkrzyniaField.setText("");
+            biegTextField.setText("");
+            obrotyField.setText("");
+            sprzegloStanField.setText("");
+            return;
+
+        }
+
+        // Jeśli auto wybrane -> wyświetl dane
         producentField.setText(currentCar.getProducent());
         modelField.setText(currentCar.getModel());
         regField.setText(currentCar.getReg());
