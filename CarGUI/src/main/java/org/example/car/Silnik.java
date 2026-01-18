@@ -40,6 +40,12 @@ public class Silnik extends Komponent
     // Metoda do dodawania gazu
     public void zwiekszObroty(int ilosc)
     {
+        if (this.obroty == 0)
+        {
+            System.out.println("Silnik jest wyłączony");
+            return;
+        }
+
         if (this.obroty + ilosc <= this.maxObroty)
         {
             this.obroty += ilosc;
