@@ -78,7 +78,8 @@ public class CarSimulatorController {
     private boolean isDownPressed = false;
     private boolean isRightPressed = false; // Gaz
     private boolean isLeftPressed = false;  // Hamulec
-
+    // Fizyczna prędkość auta
+    private double currentVelocity = 0;
 
 
     @FXML
@@ -382,33 +383,42 @@ public class CarSimulatorController {
                         // Dodajemy mniej niż przyciskiem
                         int gear = currentCar.getAktualnyBieg();
                         if (gear == 0) gear = 1;
-
                         // Baza przyspieszenia to 15
                         // Dzielimy przez numer biegu
                         // Na 1 szybciej zbiera obroty niż np. na 5
                         int acceleration = 15/gear;
-
                         currentCar.getSilnik().zwiekszObroty(acceleration);
                     } else {
                         // Na sprzęgle "gazujemy" na pusto (obroty rosną szybciej)
-                        currentCar.getSilnik().zwiekszObroty(150);
+                        currentCar.getSilnik().zwiekszObroty(100);
                     }
                 } else {
                     // PUSZCZENIE GAZU: Silnik powoli zwalnia (opór)
                     currentCar.getSilnik().zmniejszObroty(3);
                 }
-
-                if (isLeftPressed) {
-                    // HAMULEC
-                    currentCar.hamuj();
-                }
+                // HAMULEC
+                if (isLeftPressed) { currentCar.hamuj(); }
 
                 // Pobranie aktualnej prędkości (która wynika z obrotów ustawionych wyżej)
-                double speed = currentCar.getSpeed();
+                double engineTargetSpeed = currentCar.getSpeed();
+
+                if (!currentCar.getIsSprzegloPressed())
+                {
+                    // Sprzęgło PUSZCZONE (zwolnione):
+                    // Koła kręcą się tak, jak silnik (auto przyspiesza lub hamuje silnikiem)
+                    currentVelocity = engineTargetSpeed;
+                } else
+                {
+                    // Sprzęgło WCIŚNIĘTE:
+                    // Rozłączamy silnik! Auto toczy się siłą rozpędu, ale powoli zwalnia (tarcie)
+                    currentVelocity *= 0.99; // Zwalniamy o 1% co klatkę
+
+                    if (currentVelocity < 0.1) currentVelocity = 0; // Zatrzymanie
+                }
 
                 // Przesunięcie obrazka
                 double moveFactor = 0.05;
-                carImageView.setTranslateX(carImageView.getTranslateX() + (speed * moveFactor));
+                carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * moveFactor));
 
                 // Pętla mapy (teleportacja jak wyjedzie za ekran)
                 if (carImageView.getTranslateX() > 800) {
@@ -418,6 +428,8 @@ public class CarSimulatorController {
                 // Aktualizacja interfejsu
                 // Bez tego liczby na ekranie by stały w miejscu!
                 refresh();
+                // NADPISANIE pola prędkości (żeby pokazywało prędkość kół, a nie silnika)
+                predkoscField.setText(String.valueOf(Math.round(currentVelocity)));
 
                 // Jeśli klawisze nie działają, to wymusza działanie na obrazku
                 if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
