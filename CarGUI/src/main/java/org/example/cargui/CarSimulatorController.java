@@ -348,6 +348,18 @@ public class CarSimulatorController {
                 // wywołanie metody 60 hz
                 if (currentCar != null)
                 {
+                    if (isRightPressed && currentCar.czyWlaczony())
+                    {
+                        // Jeśli nie ma sprzęgła to dodajemy gazu
+                        if (!currentCar.getIsSprzegloPressed())
+                        {
+                            currentCar.getSilnik().zwiekszObroty(100); // Mniej niż przycisk
+                        } else
+                        {
+                            currentCar.getSilnik().zmniejszObroty(20); // Opór, jeśli nie trzymam gazu
+                        }
+                    }
+
                     // Pobranie prędkości
                     double speed = currentCar.getSpeed();
                     // Mały czynnik ruchu, aby auto nie poleciało w kosmos
