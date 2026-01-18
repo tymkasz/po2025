@@ -74,6 +74,13 @@ public class Samochod
         if (this.getIsSprzegloPressed())
         {
             this.skrzynia.zwiekszBieg();
+
+            int aktualne = this.silnik.getObroty();
+            int poZmianie = (int)(aktualne * 0.7);
+
+            if (stanWlaczenia && poZmianie < 800) poZmianie = 800;
+
+            this.silnik.setObroty(poZmianie);
         } else
         {
             System.out.println("Wciśnij sprzęgło, aby zmienić bieg!");
