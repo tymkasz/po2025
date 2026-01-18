@@ -116,49 +116,28 @@ public class CarSimulatorController {
 
         // Tworzenie auta i dodanie go do listy
         // Nowo powstałe auto nie jest currentCar
-        Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300, 2);
-        this.carSelectorCombo.getItems().add(car);
-
-        // Zdjęcie auta nie jest widoczne
-        this.carSelectorCombo.setVisible(false);
+        Samochod toyota = new Samochod("DW 12345", "Toyota", "GT86", 230, 1250);
+        Samochod ford = new Samochod("KR 55555", "Ford", "Mustang", 250, 1700);
+        Samochod porsche = new Samochod("W1 SPEED", "Porsche", "Porsche", 300, 1450);
+        Samochod defaultCar = new Samochod("XX 00000", "Generic", "Default", 150, 1000);
+        this.carSelectorCombo.getItems().addAll(toyota, ford, porsche, defaultCar);
 
         this.carSelectorCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 this.currentCar = newValue; // Podmiana obiektu na ten wybrany z listy
                 carImageView.setVisible(true); // Zmiana widoczności obrazka w przypadku wyboru modelu
-
+                updateCarImage(newValue);
 
                 refresh();                  // Aktualizacja pól tekstowych
-                System.out.println("Przełączono na auto: " + newValue.getModel());
+                System.out.println("Wybrano na auto: " + newValue.getModel());
             }
         });
 
-        // Próba załadowania obrazka
-        try
-        {
-            var resource = getClass().getResource("/default.png");
-
-            if (resource != null)
-            {
-                Image carImage = new Image(resource.toExternalForm());
-                System.out.println("Załadowano obrazek: " + resource.toExternalForm());
-
-                carImageView.setImage(carImage);
-                carImageView.setFitWidth(200);
-                carImageView.setFitHeight(100);
-                carImageView.setTranslateX(0);
-                carImageView.setTranslateY(0);
-            } else
-            {
-                System.err.println("BŁĄD: nie znaleziono obrazka /default.png w resources");
-            }
-        } catch (Exception e)
-        {
-            System.err.println("Wystąpił błąd podczas ładowania obrazka: " + e.getMessage());
-        }
-
         // Początkowe auto to null -> wybierz model lub wprowadź swój
         this.currentCar = null;
+        // Obrazek niewidoczny
+        carImageView.setVisible(false);
+
         this.refresh();
 
         startTimer();
@@ -174,15 +153,31 @@ public class CarSimulatorController {
             default -> "/default.png";
         };
 
-        try
-        {
-            Image image = new Image(getClass().getResource(imagePath).toExternalForm());
-            carImageView.setImage(image);
-        } catch (NullPointerException e)
-        {
-            // Jeśli zła nazwa pliku, załaduje domyślny
-            System.out.println("Nie znaleziono obrazka: " + imagePath);
-            carImageView.setImage(new Image(getClass().getResource("/default.png").toExternalForm()));
+        try {
+            var resource = getClass().getResource(imagePath);
+            Image imageToLoad;
+
+            // Sprawdzamy czy plik istnieje
+            if (resource != null) {
+                imageToLoad = new Image(resource.toExternalForm());
+            } else {
+                // Fallback do domyślnego
+                System.out.println("Brak pliku: " + imagePath + ", ładowanie domyślnego.");
+                imageToLoad = new Image(getClass().getResource("/car-icon.png").toExternalForm());
+            }
+
+            // Ustawienie wielkości obrazka
+            carImageView.setImage(imageToLoad);
+
+            carImageView.setFitWidth(200);       // Maksymalna szerokość: 200px
+            carImageView.setFitHeight(100);      // Maksymalna wysokość: 100px
+            carImageView.setPreserveRatio(true); // Zachowaj proporcje (nie rozciągaj)
+
+            // Reset pozycji
+            // carImageView.setTranslateX(0);
+
+        } catch (Exception e) {
+            System.err.println("Błąd ładowania obrazka: " + e.getMessage());
         }
 
     }
