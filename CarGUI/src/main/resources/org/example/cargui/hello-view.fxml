@@ -173,13 +173,13 @@
     <center>
         <AnchorPane style="-fx-background-color: #90ee90;">
             <children>
-                <Label text="Mapa" layoutX="14.0" layoutY="14.0" />
+                <Label text="" layoutX="14.0" layoutY="14.0" />
                 <ImageView fx:id="carImageView" fitHeight="100.0" fitWidth="100.0" layoutX="14.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../../car-icon.png" />
+                        <Image url="@../../../default.png" />
                     </image>
                 </ImageView>
-                <Label text="Car" layoutX="14.0" layoutY="90.0" />
+                <Label text="" layoutX="14.0" layoutY="90.0" />
             </children>
         </AnchorPane>
     </center>
