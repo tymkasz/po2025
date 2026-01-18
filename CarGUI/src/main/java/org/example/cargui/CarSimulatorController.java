@@ -119,30 +119,71 @@ public class CarSimulatorController {
         Samochod car = new Samochod("BE2345", "Toyota", "GT86", 300, 2);
         this.carSelectorCombo.getItems().add(car);
 
+        // Zdjęcie auta nie jest widoczne
+        this.carSelectorCombo.setVisible(false);
+
         this.carSelectorCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 this.currentCar = newValue; // Podmiana obiektu na ten wybrany z listy
+                carImageView.setVisible(true); // Zmiana widoczności obrazka w przypadku wyboru modelu
+
+
                 refresh();                  // Aktualizacja pól tekstowych
                 System.out.println("Przełączono na auto: " + newValue.getModel());
             }
         });
 
+        // Próba załadowania obrazka
+        try
+        {
+            var resource = getClass().getResource("/default.png");
 
-        Image carImage = new Image(getClass().getResource("/car-icon.png").toExternalForm());
-        System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
-        carImageView.setImage(carImage);
+            if (resource != null)
+            {
+                Image carImage = new Image(resource.toExternalForm());
+                System.out.println("Załadowano obrazek: " + resource.toExternalForm());
 
-        carImageView.setFitWidth(200);
-        carImageView.setFitHeight(100);
-
-        carImageView.setTranslateX(0);
-        carImageView.setTranslateY(0);
+                carImageView.setImage(carImage);
+                carImageView.setFitWidth(200);
+                carImageView.setFitHeight(100);
+                carImageView.setTranslateX(0);
+                carImageView.setTranslateY(0);
+            } else
+            {
+                System.err.println("BŁĄD: nie znaleziono obrazka /default.png w resources");
+            }
+        } catch (Exception e)
+        {
+            System.err.println("Wystąpił błąd podczas ładowania obrazka: " + e.getMessage());
+        }
 
         // Początkowe auto to null -> wybierz model lub wprowadź swój
         this.currentCar = null;
         this.refresh();
 
         startTimer();
+
+    }
+
+    private void updateCarImage(Samochod car)
+    {
+        String imagePath = switch (car.getModel().toLowerCase()) {
+            case "gt86" -> "/gt86.png";
+            case "mustang" -> "/mustang.png";
+            case "porsche" -> "/porsche.png";
+            default -> "/default.png";
+        };
+
+        try
+        {
+            Image image = new Image(getClass().getResource(imagePath).toExternalForm());
+            carImageView.setImage(image);
+        } catch (NullPointerException e)
+        {
+            // Jeśli zła nazwa pliku, załaduje domyślny
+            System.out.println("Nie znaleziono obrazka: " + imagePath);
+            carImageView.setImage(new Image(getClass().getResource("/default.png").toExternalForm()));
+        }
 
     }
 
