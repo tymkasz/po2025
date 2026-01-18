@@ -75,5 +75,14 @@ public class Silnik extends Komponent
         }
     }
 
+    // Setter do ustawiania obrotów
+    public void setObroty(int newObroty)
+    {
+        // Zabezpieczenie przed ujemnymi
+        if (newObroty < 0) this.obroty = 0;
+        else if (newObroty > maxObroty) this.obroty = maxObroty;
+        else this.obroty = newObroty;
+    }
+
 
 }
