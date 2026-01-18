@@ -73,6 +73,11 @@ public class CarSimulatorController {
     private TextField sprzegloStanField;
 
     private AnimationTimer timer;
+    // Flagi sterowania
+    private boolean isUpPressed = false;
+    private boolean isDownPressed = false;
+    private boolean isRightPressed = false; // Gaz
+    private boolean isLeftPressed = false;  // Hamulec
 
 
 
