@@ -93,7 +93,16 @@ public class Samochod
         // Zabezpieczenie sprzęgłem
         if (this.getIsSprzegloPressed())
         {
+            int currentSpeed = this.getSpeed();
             this.skrzynia.zmniejszBieg();
+            int nowyBieg = this.skrzynia.getAktualnyBieg();
+
+            if (nowyBieg > 0 && currentSpeed > 0)
+            {
+                int noweObroty = (currentSpeed * 80)/nowyBieg;
+                this.silnik.setObroty(noweObroty);
+                System.out.println("Zmniejszono bieg: obroty skaczą do " + noweObroty);
+            }
         } else
         {
             System.out.println("Wciśnij sprzęgło, aby zmienić bieg!");
