@@ -362,11 +362,17 @@ public class CarSimulatorController {
 
                 // Oś Y (Góra / Dół) - Zmiana pasa ruchu
                 // Działa zawsze, niezależnie od tego czy silnik włączony (można przepychać auto)
-                if (isUpPressed) {
+                if (isUpPressed)
+                {
                     carImageView.setTranslateY(carImageView.getTranslateY() - 5);
-                }
-                if (isDownPressed) {
+                    carImageView.setRotate(-15); // Obrót o -15 stopni w lewo/górę
+                } else if (isDownPressed)
+                {
                     carImageView.setTranslateY(carImageView.getTranslateY() + 5);
+                    carImageView.setRotate(15); // Obrót o +15 stopni w prawo/dół
+                } else
+                {
+                    carImageView.setRotate(0); // Wyprostowanie kół
                 }
 
                 // Oś X (Gaz / Hamulec)
