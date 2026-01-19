@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,12 +23,12 @@ public class CarSimulatorController {
     private static final double max_x_position = 800.0; // Szerokość mapy
     private static final double start_x_position = -150.0; // Gdzie auto wraca po wyjechaniu
 
-    private static final double FRICTION_CLUTCH_PRESSED = 0.998; // Tarcie (luz)
-    private static final double BRAKE_FORCE_WHEELS = 5.0;        // Siła hamowania kół
-    private static final double MOVEMENT_FACTOR = 0.05;          // Przelicznik prędkości na piksele
+    private static final double friction_clutch_pressed = 0.998; // Tarcie (luz)
+    private static final double brake_force_wheels = 5.0; // Siła hamowania kół
+    private static final double movement_factor = 0.05; // Przelicznik prędkości na piksele
 
-    private static final int RED_LINE_RPM = 6000;  // Czerwone pole obrotomierza
-    private static final int WARN_RPM = 4500;      // Żółte pole
+    private static final int red_line_rpm = 6000;  // Czerwone pole obrotomierza
+    private static final int warn_rpm = 4500;      // Żółte pole
 
     // Sprzęgło
     @FXML private Button EaseDown;
@@ -384,10 +383,10 @@ public class CarSimulatorController {
         if (currentCar.getSilnik() != null)
         {
             int rpm = currentCar.getSilnik().getObroty();
-            if (rpm > 6000)
+            if (rpm > red_line_rpm)
             {
                 obrotyField.setStyle("-fx-control-inner-background: #ffcccc; -fx-text-fill: red; -fx-font-weight: bold;");
-            } else if (rpm > 4000)
+            } else if (rpm > warn_rpm)
             {
                 obrotyField.setStyle("-fx-control-inner-background: #ffffe0; -fx-text-fill: black;");
             } else
@@ -443,7 +442,7 @@ public class CarSimulatorController {
                     // Jeśli wciśnięte sprzęgło
                     if (currentCar.getIsSprzegloPressed())
                     {
-                        currentVelocity -= 5;
+                        currentVelocity -= brake_force_wheels;
                         if (currentVelocity < 0) currentVelocity = 0;
                     }
                 } else
@@ -475,18 +474,17 @@ public class CarSimulatorController {
                 {
                     // Sprzęgło WCIŚNIĘTE:
                     // Rozłączamy silnik! Auto toczy się siłą rozpędu, ale powoli zwalnia (tarcie)
-                    currentVelocity *= 0.998; // Zwalniamy o 1% co klatkę
+                    currentVelocity *= friction_clutch_pressed; // Zwalniamy o 1% co klatkę
 
                     if (currentVelocity < 0.1) currentVelocity = 0; // Zatrzymanie
                 }
 
                 // Przesunięcie obrazka
-                double moveFactor = 0.05;
-                carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * moveFactor));
+                carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * movement_factor));
 
                 // Pętla mapy (teleportacja jak wyjedzie za ekran)
-                if (carImageView.getTranslateX() > 800) {
-                    carImageView.setTranslateX(-150);
+                if (carImageView.getTranslateX() > max_x_position) {
+                    carImageView.setTranslateX(start_x_position);
                 }
 
                 // Aktualizacja interfejsu
