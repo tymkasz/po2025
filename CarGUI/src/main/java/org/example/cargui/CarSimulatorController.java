@@ -22,7 +22,7 @@ public class CarSimulatorController {
     // Stałe wartości
     private static final double max_x_position = 800.0;     // Szerokość mapy
     private static final double start_x_position = -150.0; // Gdzie auto wraca po wyjechaniu
-    private static final double max_y_position = 250.0;    // Dolna krawędź
+    private static final double max_y_position = 850.0;    // Dolna krawędź
     private static final double min_y_position = -250.0; // Górna krawędź
 
     private static final double friction_clutch_pressed = 0.998; // Tarcie (luz)
