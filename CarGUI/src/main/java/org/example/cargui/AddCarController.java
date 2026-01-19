@@ -2,9 +2,11 @@ package org.example.cargui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.car.Car;
+import org.example.car.Engine;
 
 public class AddCarController {
 
@@ -18,6 +20,7 @@ public class AddCarController {
     @FXML private TextField plateField;
     @FXML private TextField weightField;
     @FXML private TextField maxSpeedField;
+    @FXML private ComboBox<Engine> engineTypeCombo;
 
     @FXML private Button confirmButton;
     @FXML private Button cancelButton;
@@ -41,6 +44,7 @@ public class AddCarController {
         String manufacturer = manufacturerField.getText();
         String model = modelField.getText();
         String plateNumber = plateField.getText();
+        Engine engine = engineTypeCombo.getSelectionModel().getSelectedItem();
 
         try {
             // 2. Parse numerical values (Strings to Integers)
@@ -51,7 +55,7 @@ public class AddCarController {
             // 3. Create a new Car object
             // Note: Ensure the constructor arguments match the order in Car.java
             // (plateNumber, manufacturer, model, maxSpeed, weight)
-            Car newCar = new Car(plateNumber, manufacturer, model, maxSpeed, weight);
+            Car newCar = new Car(plateNumber, manufacturer, model, maxSpeed, weight, engine);
 
             // 4. Send the new car to the main controller to update the list
             if (mainController != null) {
@@ -80,5 +84,12 @@ public class AddCarController {
     private void closeWindow() {
         Stage stage = (Stage) confirmButton.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void initialize() {
+        Engine engine = new Engine("Test", "Test", 7000);
+
+        this.engineTypeCombo.getItems().add(engine);
     }
 }

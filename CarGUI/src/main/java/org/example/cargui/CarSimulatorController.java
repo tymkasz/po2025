@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.example.car.Car;
+import org.example.car.Engine;
 
 import java.io.IOException;
 
@@ -51,6 +52,7 @@ public class CarSimulatorController {
     @FXML private TextField priceEngineField;
     @FXML private TextField weightEngineField;
     @FXML private TextField rpmField;
+    @FXML private ComboBox<Engine> engineTypeCombo;
 
     // Gearbox Controls
     @FXML private Button GearUp;

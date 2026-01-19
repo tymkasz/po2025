@@ -30,6 +30,19 @@ public class Car {
         );
     }
 
+    public Car(String plateNumber, String manufacturer, String model, int maxSpeed, int weight, Engine engine) {
+        this(
+                engine, // Default Engine
+                new Gearbox("Aisin", "Manual", 7), // Default Gearbox
+                plateNumber,
+                manufacturer,
+                model,
+                maxSpeed,
+                weight,
+                new Clutch("Exedy", "Stage1") // Default Clutch
+        );
+    }
+
     // Full Constructor (Dependency Injection)
     public Car(Engine engine, Gearbox gearbox, String plateNumber,
                String manufacturer, String model, int maxSpeed, int weight, Clutch clutch) {

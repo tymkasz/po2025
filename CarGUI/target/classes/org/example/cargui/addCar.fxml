@@ -36,7 +36,12 @@
                         <Label text="Max speed (km/h)" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                         <TextField fx:id="maxSpeedField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-                        <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+
+                        <Label text="Typ Silnika:" prefWidth="100.0" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="engineTypeCombo" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+
+                        <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="1">
                             <Button fx:id="confirmButton" text="Confirm" onAction="#onConfirm"/>
                             <Button fx:id="cancelButton" text="Cancel" onAction="#onCancel"/>
                         </HBox>
@@ -45,5 +50,4 @@
             </content>
         </TitledPane>
     </children>
-
 </VBox>
