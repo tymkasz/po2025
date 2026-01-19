@@ -22,6 +22,8 @@ public class CarSimulatorController {
     // Stałe wartości
     private static final double max_x_position = 800.0; // Szerokość mapy
     private static final double start_x_position = -150.0; // Gdzie auto wraca po wyjechaniu
+    private static final double max_y_position = 250.0;  // Dolna krawędź
+    private static final double min_y_position = -250.0; // Górna krawędź
 
     private static final double friction_clutch_pressed = 0.998; // Tarcie (luz)
     private static final double brake_force_wheels = 5.0; // Siła hamowania kół
@@ -482,9 +484,17 @@ public class CarSimulatorController {
                 // Przesunięcie obrazka
                 carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * movement_factor));
 
-                // Pętla mapy (teleportacja jak wyjedzie za ekran)
+                // Pętla mapy (teleportacja jak wyjedzie za ekran) na osi X
                 if (carImageView.getTranslateX() > max_x_position) {
                     carImageView.setTranslateX(start_x_position);
+                }
+                // Pętla mapy na osi Y
+                if (carImageView.getTranslateY() > max_y_position)
+                {
+                    carImageView.setTranslateY(min_y_position);
+                } else if (carImageView.getTranslateY() < min_y_position)
+                {
+                    carImageView.setTranslateY(max_y_position);
                 }
 
                 // Aktualizacja interfejsu
