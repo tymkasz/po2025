@@ -308,7 +308,7 @@ public class CarSimulatorController {
 
                         // Gas / Brake (X Axis) - influence on engine speed
                         if (isRightPressed && car.isOn()) {
-                            // GAZ
+                            // GAS
                             if (!car.isClutchPressed()) {
                                 int gear = car.getCurrentGear();
                                 if (gear == 0) gear = 1;
