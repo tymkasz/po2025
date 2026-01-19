@@ -395,8 +395,7 @@ public class CarSimulatorController {
                 messageLabel.setStyle("-fx-text-fill: red;");
             } else
             {
-                messageLabel.setText("SILNIK PRACUJE");
-                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("");
             }
         }
     }
