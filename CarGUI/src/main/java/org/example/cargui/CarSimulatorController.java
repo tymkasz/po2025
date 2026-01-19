@@ -56,6 +56,8 @@ public class CarSimulatorController {
     @FXML private Samochod currentCar;
     // Dioda stanu
     @FXML private Circle statusIndykator;
+    // Wiadomość o silniku
+    @FXML private Label messageLabel;
 
     private AnimationTimer timer;
     // Flagi sterowania
@@ -366,6 +368,35 @@ public class CarSimulatorController {
             {
                 statusIndykator.setFill(Color.RED); // Wyłączony -> Czerwony
                 statusIndykator.setEffect(null); // Wyłącz efekt
+            }
+        }
+
+        // Obsługa zmiany koloru obrotomierza
+        if (currentCar.getSilnik() != null)
+        {
+            int rpm = currentCar.getSilnik().getObroty();
+            if (rpm > 6000)
+            {
+                obrotyField.setStyle("-fx-control-inner-background: #ffcccc; -fx-text-fill: red; -fx-font-weight: bold;");
+            } else if (rpm > 4000)
+            {
+                obrotyField.setStyle("-fx-control-inner-background: #ffffe0; -fx-text-fill: black;");
+            } else
+            {
+                obrotyField.setStyle(null);
+            }
+        }
+        // Powiadomienia o stanie auta
+        if (messageLabel != null)
+        {
+            if (!currentCar.czyWlaczony())
+            {
+                messageLabel.setText("Silnik wyłączony");
+                messageLabel.setStyle("-fx-text-fill: red;");
+            } else
+            {
+                messageLabel.setText("SILNIK PRACUJE");
+                messageLabel.setStyle("-fx-text-fill: green;");
             }
         }
     }
