@@ -46,8 +46,8 @@
                     <items>
                         <Label text="Selected Car: "/>
                         <ComboBox fx:id="carSelectorCombo" promptText="Choose a car"/>
-                        <Button fx:id="AddingNew" text="Add New" onAction="#onOpenAddCarWindow"/>
-                        <Button fx:id="onDeletingCar" text="Delete" onAction="#onDeletingCar"/>
+                        <Button fx:id="AddingNew" text="Add New" onAction="#OpenAddCarWindow"/>
+                        <Button fx:id="DeletingCar" text="Delete" onAction="#DeletingCar"/>
                     </items>
                 </ToolBar>
             </children>
