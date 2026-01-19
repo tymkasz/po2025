@@ -12,9 +12,9 @@ public class CarApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(CarApplication.class.getResource("car-simulator-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 550);
-        stage.setTitle("Car");
+        stage.setTitle("Car Simulator");
         stage.setScene(scene);
-        //stage.setMaximized(true);
+        stage.setMaximized(true);
         stage.show();
     }
 }
