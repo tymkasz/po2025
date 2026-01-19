@@ -12,6 +12,10 @@ public class Car {
     private final int maxSpeed;
     private final int weight;
 
+    private double currentVelocity = 0;
+    private double xPosition = -0.0; // Starting X position
+    private double yPosition = 0.0;      // Starting Y position
+
     // Default Constructor for testing
     public Car(String plateNumber, String manufacturer, String model, int maxSpeed, int weight) {
         this(
@@ -134,6 +138,11 @@ public class Car {
     public Engine getEngine() { return this.engine; }
     public Gearbox getGearbox() { return this.gearbox; }
     public boolean isClutchPressed() { return this.clutch.isPressed(); }
-    public Clutch getClutch() { return this.clutch; }
+    public Clutch getClutch() { return this.clutch; }public double getCurrentVelocity() { return currentVelocity; }
+    public void setCurrentVelocity(double velocity) { this.currentVelocity = velocity; }
+    public double getXPosition() { return xPosition; }
+    public void setXPosition(double x) { this.xPosition = x; }
+    public double getYPosition() { return yPosition; }
+    public void setYPosition(double y) { this.yPosition = y; }
 
 }

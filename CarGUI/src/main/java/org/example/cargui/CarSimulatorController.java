@@ -104,6 +104,11 @@ public class CarSimulatorController {
                 this.currentCar = newValue;
                 carImageView.setVisible(true);
                 updateCarImage(newValue);
+
+                this.currentVelocity = newValue.getCurrentVelocity();
+                carImageView.setTranslateX(newValue.getXPosition());
+                carImageView.setTranslateY(newValue.getYPosition());
+
                 refresh();
                 System.out.println("Selected car: " + newValue.getModel());
             }
@@ -284,109 +289,126 @@ public class CarSimulatorController {
         this.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (currentCar == null) return;
+                // Loop on every car (even those we can't see)
+                for (Car car : carSelectorCombo.getItems()) {
 
-                //1. UP/DOWN CONTROL (LANE CHANGE)
-                if (isUpPressed) {
-                    carImageView.setTranslateY(carImageView.getTranslateY() - 5);
-                    carImageView.setRotate(-15);
-                } else if (isDownPressed) {
-                    carImageView.setTranslateY(carImageView.getTranslateY() + 5);
-                    carImageView.setRotate(15);
-                } else {
-                    carImageView.setRotate(0);
-                }
+                    // We check if this car is currently selected by the player
+                    boolean isSelected = (car == currentCar);
 
-                // 2. SPEED CONTROL (GAS / BRAKE)
-                if (isRightPressed && currentCar.isOn()) {
-                    // GAS
-                    if (!currentCar.isClutchPressed()) {
-                        // If the clutch is released, the resistance depends on the gear
-                        int gear = currentCar.getCurrentGear();
-                        if (gear == 0) gear = 1;
-                        //We use Math.abs to make it accelerate on reverse (-1) as well
-                        int acceleration = 15 / Math.abs(gear);
-                        currentCar.getEngine().increaseRpm(acceleration);
+                    // 1. ENGINE CONTROL AND Y POSITION (INPUT)
+
+                    if (isSelected) {
+                        // A) Player Controls (Keyboard)
+
+                        // Lane Change (Y Axis) - save to the Car object
+                        if (isUpPressed) {
+                            car.setYPosition(car.getYPosition() - 5);
+                        } else if (isDownPressed) {
+                            car.setYPosition(car.getYPosition() + 5);
+                        }
+
+                        // Gas / Brake (X Axis) - influence on engine speed
+                        if (isRightPressed && car.isOn()) {
+                            // GAZ
+                            if (!car.isClutchPressed()) {
+                                int gear = car.getCurrentGear();
+                                if (gear == 0) gear = 1;
+                                // Acceleration (Math.abs for reverse)
+                                car.getEngine().increaseRpm(15 / Math.abs(gear));
+                            } else {
+                                //Gassing on the clutch
+                                car.getEngine().increaseRpm(100);
+                            }
+                        } else if (isLeftPressed) {
+                            // BRAKE
+                            car.brake();
+                        } else {
+                            // RELEASE OF GAS
+                            car.getEngine().decreaseRpm(10);
+                        }
                     } else {
-                        // Gasping in neutral/clutch
-                        currentCar.getEngine().increaseRpm(100);
-                    }
-
-                } else if (isLeftPressed) {
-                    // BRAKE (Affects the engine)
-                    currentCar.brake();
-                } else {
-                    // IDLE (Engine slowly slows down on its own)
-                    currentCar.getEngine().decreaseRpm(10);
-                }
-
-                // 3. STALL LOGIC
-                if (currentCar.isOn() && currentCar.getCurrentGear() != 0 &&
-                        !currentCar.isClutchPressed() && currentCar.getEngine().getRpm() < 300) {
-                    currentCar.stop();
-                    System.out.println("Engine stalled!");
-                }
-
-                // 4. CALCULATION OF PHYSICAL SPEED
-
-                // We take the speed from the engine (it is already negative if the gear is R!)
-                double engineTargetSpeed = currentCar.getSpeed();
-
-                if (!currentCar.isClutchPressed()) {
-                    // CLUTCH RELEASED:
-                    // The wheels are rigidly connected to the engine.
-                    // If the engine is spinning in reverse, engineTargetSpeed is negative.
-                    // We assign it directly - this fixes the forward speed error in reverse.
-                    currentVelocity = engineTargetSpeed;
-
-                } else {
-                    //CLUTCH PRESSED (Neutral / Rolling):
-                    // The car is rolling with momentum, but it's losing speed due to friction.
-                    currentVelocity *= FRICTION_CLUTCH_PRESSED;
-
-                    // If we brake (left arrow) ON THE CLUTCH, the brakes act on the wheels
-                    if (isLeftPressed) {
-                        if (currentVelocity > 0) {
-                            currentVelocity -= BRAKE_FORCE_WHEELS;
-                            if (currentVelocity < 0) currentVelocity = 0;
-                        } else if (currentVelocity < 0) {
-                            currentVelocity += BRAKE_FORCE_WHEELS; // Dodajemy, żeby zbliżyć się do zera od dołu
-                            if (currentVelocity > 0) currentVelocity = 0;
+                        // B) Background Logic (When the player is not controlling)
+                        // If the car is on but no one is pressing the gas -> RPMs drop
+                        if (car.isOn()) {
+                            car.getEngine().decreaseRpm(10);
                         }
                     }
 
-                    // Complete stop at very low speed (for both directions)
-                    if (Math.abs(currentVelocity) < 0.5) currentVelocity = 0;
+                    // 2. STALL LOGIC - FOR ALL
+                    // Works for any car. If you leave the car in gear without gas, it will stall.
+                    if (car.isOn() && car.getCurrentGear() != 0 &&
+                            !car.isClutchPressed() && car.getEngine().getRpm() < 300) {
+                        car.stop();
+                        // We write in the console which car stalled (so you can see the effect in the background)
+                        System.out.println("Stalled: " + car.getModel());
+                    }
+
+                    // 3. PHYSICS AND MOTION - FOR EVERYONE
+
+                    // We take the speed resulting from the engine revolutions
+                    double carSpeed = car.getSpeed();
+                    // We get the current physical speed (inertia) stored in the car
+                    double velocity = car.getCurrentVelocity();
+
+                    if (!car.isClutchPressed()) {
+                        // Clutch released -> Engine pulls the wheels (we assign engine speed)
+                        velocity = carSpeed;
+                    } else {
+                        // Clutch engaged (Freewheel) -> Rolling with friction
+                        velocity *= FRICTION_CLUTCH_PRESSED;
+
+                        // Wheel braking (only if the player is controlling this particular car)
+                        if (isSelected && isLeftPressed) {
+                            if (velocity > 0) velocity -= BRAKE_FORCE_WHEELS;
+                            else if (velocity < 0) velocity += BRAKE_FORCE_WHEELS;
+                        }
+
+                        // Complete stop at low speed
+                        if (Math.abs(velocity) < 0.5) velocity = 0;
+                    }
+
+                    // WE SAVE THE NEW SPEED INTO THE CAR (so it remembers it in the next frame)
+                    car.setCurrentVelocity(velocity);
+
+                    // WE CALCULATE THE NEW POSITION X
+                    double newX = car.getXPosition() + (velocity * MOVEMENT_FACTOR);
+
+                    //MAP LOOPING (Teleportation)
+                    double mapWidth = gamePane.getWidth(); // Window width
+
+                    if (newX > mapWidth) {
+                        newX = START_X_POSITION;
+                    } else if (newX < START_X_POSITION - 100) {
+                        // Reversing protection
+                        newX = mapWidth;
+                    }
+
+                    // We save the new position to the car
+                    car.setXPosition(newX);
+
+                    // 4. DRAWING (RENDER) - ONLY FOR THE SELECTED CAR
+                    if (isSelected) {
+                        // We move the image to the position calculated by physics
+                        carImageView.setTranslateX(car.getXPosition());
+                        carImageView.setTranslateY(car.getYPosition());
+
+                        // Lane change rotation
+                        if (isUpPressed) carImageView.setRotate(-15);
+                        else if (isDownPressed) carImageView.setRotate(15);
+                        else carImageView.setRotate(0);
+
+                        // Updated speedometer in GUI
+                        speedField.setText(String.valueOf(Math.round(Math.abs(velocity))));
+
+                        // Maintain focus on window (for keyboard)
+                        if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
+                            carImageView.requestFocus();
+                        }
+                    }
                 }
 
-                // IMAGE MOVEMENT
-                carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * MOVEMENT_FACTOR));
-
-                // LOOP MAP
-                double currentWindowWidth = gamePane.getWidth();
-
-                if (carImageView.getTranslateX() > currentWindowWidth) {
-                    carImageView.setTranslateX(START_X_POSITION);
-                } else if (carImageView.getTranslateX() < START_X_POSITION - 100) {
-                    // Reversing protection - if you go too far to the left, it reappears on the right
-                    carImageView.setTranslateX(currentWindowWidth);
-                }
-
-                if (carImageView.getTranslateY() > MAX_Y_POSITION) {
-                    carImageView.setTranslateY(MIN_Y_POSITION);
-                } else if (carImageView.getTranslateY() < MIN_Y_POSITION) {
-                    carImageView.setTranslateY(MAX_Y_POSITION);
-                }
-
-                // UI Update
+                // Refreshing the remaining counters (RPM, Gear) for the selected car
                 refresh();
-
-                // Absolute velocity is shown
-                speedField.setText(String.valueOf(Math.round(Math.abs(currentVelocity))));
-
-                if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
-                    carImageView.requestFocus();
-                }
             }
         };
         this.timer.start();
