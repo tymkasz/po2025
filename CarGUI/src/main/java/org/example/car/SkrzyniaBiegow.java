@@ -4,6 +4,16 @@ public class SkrzyniaBiegow extends Komponent
 {
     private int aktualnyBieg;
     private final int iloscBiegow;
+    // Nowe pola - estetyka
+    private String nazwaKomponentu = "Manual 6-bieg";
+    private double cena = 6000.0;
+    private double waga = 60.0;
+
+    // Gettery
+    public String getNazwaKomponentu() { return this.nazwaKomponentu; }
+    public double getCena() { return this.cena; }
+    public double getWaga() { return this.waga; }
+    public int getAktualnyBieg() { return this.aktualnyBieg; }
 
     public SkrzyniaBiegow(String producent, String model, int iloscBiegow)
     {
@@ -46,8 +56,4 @@ public class SkrzyniaBiegow extends Komponent
         }
     }
 
-    public int getAktualnyBieg()
-    {
-        return this.aktualnyBieg;
-    }
 }
