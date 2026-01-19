@@ -5,6 +5,19 @@ public class Silnik extends Komponent
     private final int maxObroty;
     private int obroty;
     private final int obrotyBegin = 800;
+    // Nowe pola - estetyka
+    private String nazwaKomponentu = "V8 Turbo";
+    private double cena = 15000.0;
+    private double waga = 200.0;
+
+    // Gettery
+    public int getObroty()
+    {
+        return this.obroty;
+    }
+    public String getNazwaKomponentu() { return this.nazwaKomponentu; }
+    public double getCena() { return this.cena; }
+    public double getWaga() { return this.waga; }
 
     public Silnik(String producent, String model, int maxObroty)
     {
@@ -30,11 +43,6 @@ public class Silnik extends Komponent
     {
         // Wyzeruj obroty
         this.obroty = 0;
-    }
-
-    public int getObroty()
-    {
-        return this.obroty;
     }
 
     // Metoda do dodawania gazu
