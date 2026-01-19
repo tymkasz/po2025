@@ -196,6 +196,7 @@ public class CarSimulatorController {
 
             // Reset pozycji
             carImageView.setTranslateX(0);
+            carImageView.setTranslateY(0);
 
         } catch (Exception e) {
             System.err.println("Błąd ładowania obrazka: " + e.getMessage());
