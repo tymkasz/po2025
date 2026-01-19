@@ -3,6 +3,15 @@ package org.example.car;
 public class Sprzeglo extends Komponent
 {
     private boolean stanSprzegla;
+    // Nowe pola - estetyka
+    private String nazwaKomponentu = "Sportowe";
+    private double cena = 2500.0;
+    private double waga = 15.0;
+
+    // Gettery
+    public String getNazwaKomponentu() { return nazwaKomponentu; }
+    public double getCena() { return cena; }
+    public double getWaga() { return waga; }
 
     public Sprzeglo(String producent, String model)
     {
