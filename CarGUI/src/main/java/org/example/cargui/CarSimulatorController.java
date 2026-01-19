@@ -195,7 +195,7 @@ public class CarSimulatorController {
             carImageView.setPreserveRatio(true); // Zachowaj proporcje (nie rozciągaj)
 
             // Reset pozycji
-            // carImageView.setTranslateX(0);
+            carImageView.setTranslateX(0);
 
         } catch (Exception e) {
             System.err.println("Błąd ładowania obrazka: " + e.getMessage());
@@ -323,18 +323,34 @@ public class CarSimulatorController {
         {
             nazwaSkrzyniaField.setText(currentCar.getSkrzynia().getModel());
             biegTextField.setText(String.valueOf(currentCar.getAktualnyBieg()));
+            nazwaSkrzyniaField.setText(currentCar.getSkrzynia().getNazwaKomponentu());
+            cenaSkrzyniaField.setText(String.valueOf(currentCar.getSkrzynia().getCena()));
+            wagaSkrzyniaField.setText(String.valueOf(currentCar.getSkrzynia().getWaga()));
         }
 
         if (currentCar.getSilnik() != null)
         {
             // Upewnij się, że masz metodę getObroty() w Silniku
             obrotyField.setText(String.valueOf(currentCar.getSilnik().getObroty()));
+
+            if (nazwaSilnikField != null)
+            {
+                nazwaSilnikField.setText(currentCar.getSilnik().getNazwaKomponentu());
+                cenaSilnikField.setText(String.valueOf(currentCar.getSilnik().getCena()));
+                wagaSilnikField.setText(String.valueOf(currentCar.getSilnik().getWaga()));
+            }
         }
 
         if (currentCar.getSprzeglo() != null)
         {
             String stan = currentCar.getIsSprzegloPressed() ? "Wciśnięte" : "Zwolnione";
             sprzegloStanField.setText(stan);
+
+            if (nazwaSprzegloField != null) {
+                nazwaSprzegloField.setText(currentCar.getSprzeglo().getNazwaKomponentu());
+                cenaSprzegloField.setText(String.valueOf(currentCar.getSprzeglo().getCena()));
+                wagaSprzegloField.setText(String.valueOf(currentCar.getSprzeglo().getWaga()));
+            }
         }
     }
 
