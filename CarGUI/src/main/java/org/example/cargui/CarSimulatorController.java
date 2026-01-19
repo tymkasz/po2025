@@ -344,7 +344,7 @@ public class CarSimulatorController {
 
                     // 3. PHYSICS AND MOTION - FOR EVERYONE
 
-                    // We take the speed resulting from the engine revolutions
+                    // We take the speed resulting from the engine work
                     double carSpeed = car.getSpeed();
                     // We get the current physical speed (inertia) stored in the car
                     double velocity = car.getCurrentVelocity();
