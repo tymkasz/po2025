@@ -21,56 +21,40 @@ public class CarSimulatorController {
 
     private ArrayList<Samochod> carList = new ArrayList<>();
 
-    @FXML
-    private Button EaseDown;
-    @FXML
-    private Button Press;
-    @FXML
-    private Button SpeedUp;
-    @FXML
-    private Button SlowDown;
-    @FXML
-    private Button GearUp;
-    @FXML
-    private Button GearDown;
-    @FXML
-    private Button TurnOffButton;
-    @FXML
-    private Button StartButton;
-    @FXML
-    private ComboBox<Samochod> carSelectorCombo;
-    @FXML
-    private Button AddingNew;
-    @FXML
-    private Button DeletingCar;
-    @FXML
-    public TextField producentField;
-    @FXML
-    private TextField modelField;
-    @FXML
-    private TextField regField;
-    @FXML
-    private TextField wagaField;
-    @FXML
-    private TextField predkoscField;
-    @FXML
-    private ImageView carImageView;
-    @FXML
-    private Samochod currentCar;
-    @FXML
-    private Label welcomeText;
-    @FXML
-    private TextField nazwaSkrzyniaField;
-    @FXML
-    private TextField cenaSkrzyniaField;
-    @FXML
-    private TextField wagaSkrzyniaField;
-    @FXML
-    private TextField biegTextField;
-    @FXML
-    private TextField obrotyField;
-    @FXML
-    private TextField sprzegloStanField;
+    // Sprzęgło
+    @FXML private Button EaseDown;
+    @FXML private Button Press;
+    @FXML private TextField nazwaSprzegloField; // fx:id="nazwaSprzegloField"
+    @FXML private TextField cenaSprzegloField;  // fx:id="cenaSprzegloField"
+    @FXML private TextField wagaSprzegloField;  // fx:id="wagaSprzegloField"
+    @FXML private TextField sprzegloStanField;
+    // Silnik
+    @FXML private Button SpeedUp;
+    @FXML private Button SlowDown;
+    @FXML private TextField nazwaSilnikField;  // Sprawdź w SceneBuilderze czy id to fx:id="nazwaSilnikField"
+    @FXML private TextField cenaSilnikField;   // fx:id="cenaSilnikField"
+    @FXML private TextField wagaSilnikField;   // fx:id="wagaSilnikField"
+    @FXML private TextField obrotyField;
+    // Skrzynia biegów
+    @FXML private Button GearUp;
+    @FXML private Button GearDown;
+    @FXML private TextField nazwaSkrzyniaField;
+    @FXML private TextField cenaSkrzyniaField;
+    @FXML private TextField wagaSkrzyniaField;
+    @FXML private TextField biegTextField;
+    // Samochód
+    @FXML private Button TurnOffButton;
+    @FXML private Button StartButton;
+    @FXML private ComboBox<Samochod> carSelectorCombo;
+    @FXML private Button AddingNew;
+    @FXML private Button DeletingCar;
+    @FXML public TextField producentField;
+    @FXML private TextField modelField;
+    @FXML private TextField regField;
+    @FXML private TextField wagaField;
+    @FXML private TextField predkoscField;
+    @FXML private ImageView carImageView;
+    @FXML private Samochod currentCar;
 
     private AnimationTimer timer;
     // Flagi sterowania
@@ -80,12 +64,6 @@ public class CarSimulatorController {
     private boolean isLeftPressed = false;  // Hamulec
     // Fizyczna prędkość auta
     private double currentVelocity = 0;
-
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 
     @FXML
     private void onStart(ActionEvent actionEvent) {
