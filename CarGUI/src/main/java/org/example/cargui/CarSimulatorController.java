@@ -20,6 +20,17 @@ import javafx.scene.paint.Color;
 
 public class CarSimulatorController {
 
+    // Stałe wartości
+    private static final double max_x_position = 800.0; // Szerokość mapy
+    private static final double start_x_position = -150.0; // Gdzie auto wraca po wyjechaniu
+
+    private static final double FRICTION_CLUTCH_PRESSED = 0.998; // Tarcie (luz)
+    private static final double BRAKE_FORCE_WHEELS = 5.0;        // Siła hamowania kół
+    private static final double MOVEMENT_FACTOR = 0.05;          // Przelicznik prędkości na piksele
+
+    private static final int RED_LINE_RPM = 6000;  // Czerwone pole obrotomierza
+    private static final int WARN_RPM = 4500;      // Żółte pole
+
     // Sprzęgło
     @FXML private Button EaseDown;
     @FXML private Button Press;
