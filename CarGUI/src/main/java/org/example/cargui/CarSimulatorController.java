@@ -14,8 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.example.car.Samochod;
 import java.io.IOException;
-import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
 public class CarSimulatorController {
 
@@ -53,6 +54,8 @@ public class CarSimulatorController {
     @FXML private TextField predkoscField;
     @FXML private ImageView carImageView;
     @FXML private Samochod currentCar;
+    // Dioda stanu
+    @FXML private Circle statusIndykator;
 
     private AnimationTimer timer;
     // Flagi sterowania
@@ -349,6 +352,20 @@ public class CarSimulatorController {
                 nazwaSprzegloField.setText(currentCar.getSprzeglo().getNazwaKomponentu());
                 cenaSprzegloField.setText(String.valueOf(currentCar.getSprzeglo().getCena()));
                 wagaSprzegloField.setText(String.valueOf(currentCar.getSprzeglo().getWaga()));
+            }
+        }
+
+        // Obsługa diody
+        if (statusIndykator != null)
+        {
+            if (currentCar != null && currentCar.czyWlaczony())
+            {
+                statusIndykator.setFill(Color.LIGHTGREEN); // Włączony -> dioda zielona
+                statusIndykator.setEffect(new javafx.scene.effect.Glow(0.8)); // Efekt świecenia
+            } else
+            {
+                statusIndykator.setFill(Color.RED); // Wyłączony -> Czerwony
+                statusIndykator.setEffect(null); // Wyłącz efekt
             }
         }
     }

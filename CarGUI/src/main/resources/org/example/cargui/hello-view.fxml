@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.shape.Circle?>
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.cargui.CarSimulatorController">
@@ -83,6 +83,7 @@
                                 <TextField fx:id="predkoscField" GridPane.rowIndex="4" GridPane.columnIndex="1" editable="false"/>
 
                                 <HBox spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                                    <Circle fx:id="statusIndykator" fill="RED" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                     <Button fx:id="StartButton" text="Włącz" onAction="#onStart"/>
                                     <Button fx:id="TurnOffButton" text="Wyłącz" onAction="#onTurnOff"/>
                                 </HBox>
