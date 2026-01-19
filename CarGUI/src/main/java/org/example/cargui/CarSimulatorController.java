@@ -502,6 +502,14 @@ public class CarSimulatorController {
         gearTextField.setText("");
         rpmField.setText("");
         clutchStateField.setText("");
+        nameGearboxField.setText("");
+        weightGearboxField.setText("");
+        nameEngineField.setText("");
+        priceEngineField.setText("");
+        weightEngineField.setText("");
+        nameClutchField.setText("");
+        priceClutchField.setText("");
+        weightClutchField.setText("");
         if (indicatorStatus != null) indicatorStatus.setFill(Color.GREY);
     }
 }
