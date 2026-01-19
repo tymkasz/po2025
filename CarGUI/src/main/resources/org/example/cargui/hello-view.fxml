@@ -127,11 +127,14 @@
                             </padding>
                             <children>
                                 <Label text="Nazwa" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="nazwaSilnikField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Cena" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="cenaSilnikField" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="wagaSilnikField" GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Obroty" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                 <TextField fx:id="obrotyField" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
                                 <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
@@ -151,11 +154,14 @@
                             </padding>
                             <children>
                                 <Label text="Nazwa" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="nazwaSprzegloField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Cena" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="cenaSprzegloField" GridPane.rowIndex="1" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Waga" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="wagaSprzegloField" GridPane.rowIndex="2" GridPane.columnIndex="1" editable="false"/>
+
                                 <Label text="Stan" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                 <TextField fx:id="sprzegloStanField" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
                                 <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
