@@ -19,8 +19,6 @@ import javafx.animation.AnimationTimer;
 
 public class CarSimulatorController {
 
-    private ArrayList<Samochod> carList = new ArrayList<>();
-
     // Sprzęgło
     @FXML private Button EaseDown;
     @FXML private Button Press;
@@ -387,12 +385,8 @@ public class CarSimulatorController {
                         // Na sprzęgle "gazujemy" na pusto (obroty rosną szybciej)
                         currentCar.getSilnik().zwiekszObroty(100);
                     }
-                } else {
-                    // PUSZCZENIE GAZU: Silnik powoli zwalnia (opór)
-                    currentCar.getSilnik().zmniejszObroty(3);
-                }
-                // HAMULEC
-                if (isLeftPressed)
+
+                } else if (isLeftPressed) // HAMULEC
                 {
                     currentCar.hamuj();
 
@@ -402,6 +396,21 @@ public class CarSimulatorController {
                         currentVelocity -= 5;
                         if (currentVelocity < 0) currentVelocity = 0;
                     }
+                } else
+                {
+                    // PUSZCZENIE GAZU: Silnik powoli zwalnia (opór)
+                    currentCar.getSilnik().zmniejszObroty(10);
+                }
+
+                // Symulacja zgaśnięcia silnika
+                // Obroty spadną poniżej minimalnych na biegu i bez sprzęgła -> silnik gaśnie
+                if (currentCar.czyWlaczony()
+                    && currentCar.getAktualnyBieg() > 0
+                    && !currentCar.getIsSprzegloPressed()
+                    && currentCar.getSilnik().getObroty() < 300)
+                {
+                    currentCar.wylacz();
+                    System.out.println("Silnik zgasł. Zbyt małe obroty na biegu");
                 }
 
                 // Pobranie aktualnej prędkości (która wynika z obrotów ustawionych wyżej)
