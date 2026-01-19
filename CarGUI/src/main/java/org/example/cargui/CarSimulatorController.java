@@ -65,7 +65,7 @@ public class CarSimulatorController {
     @FXML private Button StartButton;
     @FXML private ComboBox<Car> carSelectorCombo;
     @FXML private Button AddingNew;
-    @FXML private Button onDeletingCar;
+    @FXML private Button DeletingCar;
     @FXML public TextField manufacturerField;
     @FXML private TextField modelField;
     @FXML private TextField plateField;
@@ -244,7 +244,7 @@ public class CarSimulatorController {
     }
 
     @FXML
-    private void onDeletingCar(ActionEvent actionEvent) {
+    private void DeletingCar(ActionEvent actionEvent) {
         Car selectedCar = carSelectorCombo.getSelectionModel().getSelectedItem();
         if (selectedCar != null) {
             carSelectorCombo.getItems().remove(selectedCar);
@@ -255,13 +255,12 @@ public class CarSimulatorController {
     }
 
     @FXML
-    private void onOpenAddCarWindow() throws IOException {
+    private void OpenAddCarWindow() throws IOException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addCar.fxml"));
             Parent root = loader.load();
 
             AddCarController controller = loader.getController();
-            // This method must exist in AddCarController:
             controller.setMainController(this);
 
             Stage stage = new Stage();
@@ -281,14 +280,13 @@ public class CarSimulatorController {
     }
 
     // SIMULATION LOOP & LOGIC
-
     private void startTimer() {
         this.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 if (currentCar == null) return;
 
-                // Y AXIS (Lane Change)
+                //1. UP/DOWN CONTROL (LANE CHANGE)
                 if (isUpPressed) {
                     carImageView.setTranslateY(carImageView.getTranslateY() - 5);
                     carImageView.setRotate(-15);
@@ -299,75 +297,93 @@ public class CarSimulatorController {
                     carImageView.setRotate(0);
                 }
 
-                // X AXIS (Physics)
+                // 2. SPEED CONTROL (GAS / BRAKE)
                 if (isRightPressed && currentCar.isOn()) {
                     // GAS
                     if (!currentCar.isClutchPressed()) {
+                        // If the clutch is released, the resistance depends on the gear
                         int gear = currentCar.getCurrentGear();
                         if (gear == 0) gear = 1;
-                        // Acceleration depends on gear (lower gear = faster rpm gain)
-                        int acceleration = 15 / gear;
+                        //We use Math.abs to make it accelerate on reverse (-1) as well
+                        int acceleration = 15 / Math.abs(gear);
                         currentCar.getEngine().increaseRpm(acceleration);
                     } else {
-                        // Revving on neutral/clutch
+                        // Gasping in neutral/clutch
                         currentCar.getEngine().increaseRpm(100);
                     }
 
                 } else if (isLeftPressed) {
-                    // BRAKE
+                    // BRAKE (Affects the engine)
                     currentCar.brake();
-                    if (currentCar.isClutchPressed()) {
-                        currentVelocity -= BRAKE_FORCE_WHEELS;
-                        if (currentVelocity < 0) currentVelocity = 0;
-                    }
                 } else {
-                    // IDLE (Engine drag)
+                    // IDLE (Engine slowly slows down on its own)
                     currentCar.getEngine().decreaseRpm(10);
                 }
 
-                // Stall Logic
-                if (currentCar.isOn() && currentCar.getCurrentGear() > 0 &&
+                // 3. STALL LOGIC
+                if (currentCar.isOn() && currentCar.getCurrentGear() != 0 &&
                         !currentCar.isClutchPressed() && currentCar.getEngine().getRpm() < 300) {
                     currentCar.stop();
                     System.out.println("Engine stalled!");
                 }
 
-                // SPEED CALCULATION
+                // 4. CALCULATION OF PHYSICAL SPEED
+
+                // We take the speed from the engine (it is already negative if the gear is R!)
                 double engineTargetSpeed = currentCar.getSpeed();
 
                 if (!currentCar.isClutchPressed()) {
-                    // Clutch Released: Wheels locked to engine speed
+                    // CLUTCH RELEASED:
+                    // The wheels are rigidly connected to the engine.
+                    // If the engine is spinning in reverse, engineTargetSpeed is negative.
+                    // We assign it directly - this fixes the forward speed error in reverse.
                     currentVelocity = engineTargetSpeed;
+
                 } else {
-                    // Clutch Pressed: Coasting (Friction slows down)
+                    //CLUTCH PRESSED (Neutral / Rolling):
+                    // The car is rolling with momentum, but it's losing speed due to friction.
                     currentVelocity *= FRICTION_CLUTCH_PRESSED;
-                    if (currentVelocity < 0.1) currentVelocity = 0;
+
+                    // If we brake (left arrow) ON THE CLUTCH, the brakes act on the wheels
+                    if (isLeftPressed) {
+                        if (currentVelocity > 0) {
+                            currentVelocity -= BRAKE_FORCE_WHEELS;
+                            if (currentVelocity < 0) currentVelocity = 0;
+                        } else if (currentVelocity < 0) {
+                            currentVelocity += BRAKE_FORCE_WHEELS; // Dodajemy, żeby zbliżyć się do zera od dołu
+                            if (currentVelocity > 0) currentVelocity = 0;
+                        }
+                    }
+
+                    // Complete stop at very low speed (for both directions)
+                    if (Math.abs(currentVelocity) < 0.5) currentVelocity = 0;
                 }
 
-                // Move Image
+                // IMAGE MOVEMENT
                 carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * MOVEMENT_FACTOR));
 
-                // MAP LOOPING
+                // LOOP MAP
                 double currentWindowWidth = gamePane.getWidth();
 
-                // Loop X
                 if (carImageView.getTranslateX() > currentWindowWidth) {
                     carImageView.setTranslateX(START_X_POSITION);
+                } else if (carImageView.getTranslateX() < START_X_POSITION - 100) {
+                    // Reversing protection - if you go too far to the left, it reappears on the right
+                    carImageView.setTranslateX(currentWindowWidth);
                 }
 
-                // Loop Y
                 if (carImageView.getTranslateY() > MAX_Y_POSITION) {
                     carImageView.setTranslateY(MIN_Y_POSITION);
                 } else if (carImageView.getTranslateY() < MIN_Y_POSITION) {
                     carImageView.setTranslateY(MAX_Y_POSITION);
                 }
 
-                // Update UI
+                // UI Update
                 refresh();
-                // Overwrite speed field with physics speed
-                speedField.setText(String.valueOf(Math.round(currentVelocity)));
 
-                // Focus fix for keyboard
+                // Absolute velocity is shown
+                speedField.setText(String.valueOf(Math.round(Math.abs(currentVelocity))));
+
                 if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
                     carImageView.requestFocus();
                 }
@@ -387,14 +403,23 @@ public class CarSimulatorController {
         modelField.setText(currentCar.getModel());
         plateField.setText(currentCar.getPlateNumber());
         weightField.setText(String.valueOf(currentCar.getWeight()));
-        speedField.setText(String.valueOf(currentCar.getSpeed()));
+        speedField.setText(String.valueOf(Math.abs(currentCar.getSpeed()))); // Speedometer shows +
 
         // Gearbox
         if (currentCar.getGearbox() != null) {
             nameGearboxField.setText(currentCar.getGearbox().getComponentName());
             priceGearboxField.setText(String.valueOf(currentCar.getGearbox().getPrice()));
             weightGearboxField.setText(String.valueOf(currentCar.getGearbox().getWeight()));
-            gearTextField.setText(String.valueOf(currentCar.getCurrentGear()));
+
+            // Pretty display for Reverse and Neutral
+            int gear = currentCar.getCurrentGear();
+            if (gear == -1) {
+                gearTextField.setText("R");
+            } else if (gear == 0) {
+                gearTextField.setText("N");
+            } else {
+                gearTextField.setText(String.valueOf(gear));
+            }
         }
 
         // Engine
