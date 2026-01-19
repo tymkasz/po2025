@@ -2,8 +2,8 @@ package org.example.cargui;
 
 import javafx.application.Application;
 
-public class Launcher {
+public class CarLauncher {
     public static void main(String[] args) {
-        Application.launch(HelloApplication.class, args);
+        Application.launch(CarApplication.class, args);
     }
 }
