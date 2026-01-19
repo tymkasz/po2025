@@ -56,8 +56,6 @@ public class CarSimulatorController {
     @FXML private Samochod currentCar;
     // Dioda stanu
     @FXML private Circle statusIndykator;
-    // Wiadomość o silniku
-    @FXML private Label messageLabel;
 
     private AnimationTimer timer;
     // Flagi sterowania
@@ -384,18 +382,6 @@ public class CarSimulatorController {
             } else
             {
                 obrotyField.setStyle(null);
-            }
-        }
-        // Powiadomienia o stanie auta
-        if (messageLabel != null)
-        {
-            if (!currentCar.czyWlaczony())
-            {
-                messageLabel.setText("Silnik wyłączony");
-                messageLabel.setStyle("-fx-text-fill: red;");
-            } else
-            {
-                messageLabel.setText("");
             }
         }
     }

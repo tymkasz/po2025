@@ -188,11 +188,6 @@
                     </image>
                 </ImageView>
                 <Label text="" layoutX="14.0" layoutY="90.0" />
-                <Label fx:id="messageLabel" layoutX="350.0" layoutY="30.0" text="SILNIK WYŁĄCZONY" textFill="RED" mouseTransparent="true">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                </Label>
             </children>
         </AnchorPane>
     </center>
