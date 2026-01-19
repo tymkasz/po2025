@@ -138,7 +138,8 @@ public class Car {
     public Engine getEngine() { return this.engine; }
     public Gearbox getGearbox() { return this.gearbox; }
     public boolean isClutchPressed() { return this.clutch.isPressed(); }
-    public Clutch getClutch() { return this.clutch; }public double getCurrentVelocity() { return currentVelocity; }
+    public Clutch getClutch() { return this.clutch; }
+    public double getCurrentVelocity() { return currentVelocity; }
     public void setCurrentVelocity(double velocity) { this.currentVelocity = velocity; }
     public double getXPosition() { return xPosition; }
     public void setXPosition(double x) { this.xPosition = x; }

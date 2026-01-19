@@ -377,13 +377,24 @@ public class CarSimulatorController {
 
                     if (newX > mapWidth) {
                         newX = START_X_POSITION;
-                    } else if (newX < START_X_POSITION - 100) {
+                    } else if (newX < START_X_POSITION) {
                         // Reversing protection
                         newX = mapWidth;
                     }
 
                     // We save the new position to the car
                     car.setXPosition(newX);
+
+                    // We download the current Y position saved in the car
+                    double currentY = car.getYPosition();
+
+                    if (currentY > MAX_Y_POSITION) {
+                        currentY = MIN_Y_POSITION; // If it goes out the bottom, it comes back the top
+                    } else if (currentY < MIN_Y_POSITION) {
+                        currentY = MAX_Y_POSITION; // If it goes up, it comes back down
+                    }
+
+                    car.setYPosition(currentY);
 
                     // 4. DRAWING (RENDER) - ONLY FOR THE SELECTED CAR
                     if (isSelected) {
