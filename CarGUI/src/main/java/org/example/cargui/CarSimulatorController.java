@@ -39,26 +39,26 @@ public class CarSimulatorController {
     // Clutch Controls
     @FXML private Button EaseDown;
     @FXML private Button Press;
-    @FXML private TextField nazwaSprzegloField;
-    @FXML private TextField cenaSprzegloField;
-    @FXML private TextField wagaSprzegloField;
-    @FXML private TextField sprzegloStanField;
+    @FXML private TextField nameClutchField;
+    @FXML private TextField priceClutchField;
+    @FXML private TextField weightClutchField;
+    @FXML private TextField clutchStateField;
 
     // Engine Controls
     @FXML private Button SpeedUp;
     @FXML private Button SlowDown;
-    @FXML private TextField nazwaSilnikField;
-    @FXML private TextField cenaSilnikField;
-    @FXML private TextField wagaSilnikField;
-    @FXML private TextField obrotyField;
+    @FXML private TextField nameEngineField;
+    @FXML private TextField priceEngineField;
+    @FXML private TextField weightEngineField;
+    @FXML private TextField rpmField;
 
     // Gearbox Controls
     @FXML private Button GearUp;
     @FXML private Button GearDown;
-    @FXML private TextField nazwaSkrzyniaField;
-    @FXML private TextField cenaSkrzyniaField;
-    @FXML private TextField wagaSkrzyniaField;
-    @FXML private TextField biegTextField;
+    @FXML private TextField nameGearboxField;
+    @FXML private TextField priceGearboxField;
+    @FXML private TextField weightGearboxField;
+    @FXML private TextField gearTextField;
 
     // Car & Dashboard
     @FXML private Button TurnOffButton;
@@ -66,13 +66,13 @@ public class CarSimulatorController {
     @FXML private ComboBox<Car> carSelectorCombo;
     @FXML private Button AddingNew;
     @FXML private Button onDeletingCar;
-    @FXML public TextField producentField;
+    @FXML public TextField manufacturerField;
     @FXML private TextField modelField;
-    @FXML private TextField regField;
-    @FXML private TextField wagaField;
-    @FXML private TextField predkoscField;
+    @FXML private TextField plateField;
+    @FXML private TextField weightField;
+    @FXML private TextField speedField;
     @FXML private ImageView carImageView;
-    @FXML private Circle statusIndykator; // Status LED
+    @FXML private Circle indicatorStatus; // Status LED
     @FXML private AnchorPane gamePane;    // Game Background
 
     // Logic
@@ -365,7 +365,7 @@ public class CarSimulatorController {
                 // Update UI
                 refresh();
                 // Overwrite speed field with physics speed
-                predkoscField.setText(String.valueOf(Math.round(currentVelocity)));
+                speedField.setText(String.valueOf(Math.round(currentVelocity)));
 
                 // Focus fix for keyboard
                 if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
@@ -383,68 +383,68 @@ public class CarSimulatorController {
         }
 
         // Basic Info
-        producentField.setText(currentCar.getManufacturer());
+        manufacturerField.setText(currentCar.getManufacturer());
         modelField.setText(currentCar.getModel());
-        regField.setText(currentCar.getPlateNumber());
-        wagaField.setText(String.valueOf(currentCar.getWeight()));
-        predkoscField.setText(String.valueOf(currentCar.getSpeed()));
+        plateField.setText(currentCar.getPlateNumber());
+        weightField.setText(String.valueOf(currentCar.getWeight()));
+        speedField.setText(String.valueOf(currentCar.getSpeed()));
 
         // Gearbox
         if (currentCar.getGearbox() != null) {
-            nazwaSkrzyniaField.setText(currentCar.getGearbox().getComponentName());
-            cenaSkrzyniaField.setText(String.valueOf(currentCar.getGearbox().getPrice()));
-            wagaSkrzyniaField.setText(String.valueOf(currentCar.getGearbox().getWeight()));
-            biegTextField.setText(String.valueOf(currentCar.getCurrentGear()));
+            nameGearboxField.setText(currentCar.getGearbox().getComponentName());
+            priceGearboxField.setText(String.valueOf(currentCar.getGearbox().getPrice()));
+            weightGearboxField.setText(String.valueOf(currentCar.getGearbox().getWeight()));
+            gearTextField.setText(String.valueOf(currentCar.getCurrentGear()));
         }
 
         // Engine
         if (currentCar.getEngine() != null) {
-            obrotyField.setText(String.valueOf(currentCar.getEngine().getRpm()));
-            nazwaSilnikField.setText(currentCar.getEngine().getComponentName());
-            cenaSilnikField.setText(String.valueOf(currentCar.getEngine().getPrice()));
-            wagaSilnikField.setText(String.valueOf(currentCar.getEngine().getWeight()));
+            rpmField.setText(String.valueOf(currentCar.getEngine().getRpm()));
+            nameEngineField.setText(currentCar.getEngine().getComponentName());
+            priceEngineField.setText(String.valueOf(currentCar.getEngine().getPrice()));
+            weightEngineField.setText(String.valueOf(currentCar.getEngine().getWeight()));
 
             // Tachometer Colors
             int rpm = currentCar.getEngine().getRpm();
             if (rpm > RED_LINE_RPM) {
-                obrotyField.setStyle("-fx-control-inner-background: #ffcccc; -fx-text-fill: red; -fx-font-weight: bold;");
+                rpmField.setStyle("-fx-control-inner-background: #ffcccc; -fx-text-fill: red; -fx-font-weight: bold;");
             } else if (rpm > WARN_RPM) {
-                obrotyField.setStyle("-fx-control-inner-background: #ffffe0; -fx-text-fill: black;");
+                rpmField.setStyle("-fx-control-inner-background: #ffffe0; -fx-text-fill: black;");
             } else {
-                obrotyField.setStyle(null);
+                rpmField.setStyle(null);
             }
         }
 
         // Clutch
         if (currentCar.getClutch() != null) {
-            sprzegloStanField.setText(currentCar.isClutchPressed() ? "Pressed" : "Released");
-            nazwaSprzegloField.setText(currentCar.getClutch().getComponentName());
-            cenaSprzegloField.setText(String.valueOf(currentCar.getClutch().getPrice()));
-            wagaSprzegloField.setText(String.valueOf(currentCar.getClutch().getWeight()));
+            clutchStateField.setText(currentCar.isClutchPressed() ? "Pressed" : "Released");
+            nameClutchField.setText(currentCar.getClutch().getComponentName());
+            priceClutchField.setText(String.valueOf(currentCar.getClutch().getPrice()));
+            weightClutchField.setText(String.valueOf(currentCar.getClutch().getWeight()));
         }
 
         // Status LED
-        if (statusIndykator != null) {
+        if (indicatorStatus != null) {
             if (currentCar.isOn()) {
-                statusIndykator.setFill(Color.LIGHTGREEN);
-                statusIndykator.setEffect(new Glow(0.8));
+                indicatorStatus.setFill(Color.LIGHTGREEN);
+                indicatorStatus.setEffect(new Glow(0.8));
             } else {
-                statusIndykator.setFill(Color.RED);
-                statusIndykator.setEffect(null);
+                indicatorStatus.setFill(Color.RED);
+                indicatorStatus.setEffect(null);
             }
         }
     }
 
     private void clearFields() {
-        producentField.setText("");
+        manufacturerField.setText("");
         modelField.setText("");
-        regField.setText("");
-        wagaField.setText("");
-        predkoscField.setText("");
-        nazwaSkrzyniaField.setText("");
-        biegTextField.setText("");
-        obrotyField.setText("");
-        sprzegloStanField.setText("");
-        if (statusIndykator != null) statusIndykator.setFill(Color.GREY);
+        plateField.setText("");
+        weightField.setText("");
+        speedField.setText("");
+        nameGearboxField.setText("");
+        gearTextField.setText("");
+        rpmField.setText("");
+        clutchStateField.setText("");
+        if (indicatorStatus != null) indicatorStatus.setFill(Color.GREY);
     }
 }
