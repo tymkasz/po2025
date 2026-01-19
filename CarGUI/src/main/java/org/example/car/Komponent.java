@@ -1,25 +1,30 @@
 package org.example.car;
 
-// Abstract -> nie mogę stworzyć instancji klasy Komponent -> służy ona jedynie dziedziczeniu
-// DRY - Don't Repeat Yourself
-public abstract class Komponent
-{
-    protected String producent;
-    protected String model;
+/**
+ * Klasa bazowa dla wszystkich części samochodu (Silnik, Skrzynia, etc.).
+ * Przechowuje wspólne cechy identyfikacyjne.
+ **/
+public abstract class Komponent {
+    private final String producent;
+    private final String model;
 
-    // Konstruktor -> wymuszenie dziedziczenia producenta i modelu
-    public Komponent(String producent, String model)
-    {
+    /**
+     * Konstruktor bazowy.
+     *
+     * @param producent Nazwa producenta części
+     * @param model     Nazwa modelu części
+     **/
+    public Komponent(String producent, String model) {
         this.producent = producent;
         this.model = model;
     }
-    public String getProducent()
-    {
-        return this.producent;
-    }
 
-    public String getModel()
-    {
-        return this.model;
+    public String getProducent() {
+        return producent;
     }
+    public String getModel() {
+        return model;
+    }
+    @Override
+    public String toString() { return producent + " " + model; }
 }
