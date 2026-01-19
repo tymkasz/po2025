@@ -299,7 +299,6 @@ public class CarSimulatorController {
 
                     if (isSelected) {
                         // A) Player Controls (Keyboard)
-
                         // Lane Change (Y Axis) - save to the Car object
                         if (isUpPressed) {
                             car.setYPosition(car.getYPosition() - 5);
