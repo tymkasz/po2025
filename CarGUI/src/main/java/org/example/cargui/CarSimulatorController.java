@@ -1,5 +1,6 @@
 package org.example.cargui;
 
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,184 +9,152 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import org.example.car.Samochod;
-import java.io.IOException;
-import javafx.animation.AnimationTimer;
-import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import org.example.car.Car;
+
+import java.io.IOException;
 
 public class CarSimulatorController {
 
-    // Stałe wartości
-    private static final double start_x_position = -150.0; // Gdzie auto wraca po wyjechaniu
-    private static final double max_y_position = 850.0;    // Dolna krawędź
-    private static final double min_y_position = -250.0; // Górna krawędź
+    // CONSTANTS
+    private static final double START_X_POSITION = -150.0; // Reset position
+    private static final double MAX_Y_POSITION = 850.0;    // Bottom limit
+    private static final double MIN_Y_POSITION = -250.0;   // Top limit
 
-    private static final double friction_clutch_pressed = 0.998; // Tarcie (luz)
-    private static final double brake_force_wheels = 5.0; // Siła hamowania kół
-    private static final double movement_factor = 0.05; // Przelicznik prędkości na piksele
+    private static final double FRICTION_CLUTCH_PRESSED = 0.998; // Rolling friction
+    private static final double BRAKE_FORCE_WHEELS = 5.0;        // Brake strength
+    private static final double MOVEMENT_FACTOR = 0.05;          // Speed to Pixel factor
 
-    private static final int red_line_rpm = 6000;  // Czerwone pole obrotomierza
-    private static final int warn_rpm = 4500;      // Żółte pole
+    private static final int RED_LINE_RPM = 6000;  // Red zone start
+    private static final int WARN_RPM = 4500;      // Yellow zone start
 
-    // Sprzęgło
+    // FXML COMPONENTS
+
+    // Clutch Controls
     @FXML private Button EaseDown;
     @FXML private Button Press;
-    @FXML private TextField nazwaSprzegloField; // fx:id="nazwaSprzegloField"
-    @FXML private TextField cenaSprzegloField;  // fx:id="cenaSprzegloField"
-    @FXML private TextField wagaSprzegloField;  // fx:id="wagaSprzegloField"
+    @FXML private TextField nazwaSprzegloField;
+    @FXML private TextField cenaSprzegloField;
+    @FXML private TextField wagaSprzegloField;
     @FXML private TextField sprzegloStanField;
-    // Silnik
+
+    // Engine Controls
     @FXML private Button SpeedUp;
     @FXML private Button SlowDown;
-    @FXML private TextField nazwaSilnikField;  // Sprawdź w SceneBuilderze czy id to fx:id="nazwaSilnikField"
-    @FXML private TextField cenaSilnikField;   // fx:id="cenaSilnikField"
-    @FXML private TextField wagaSilnikField;   // fx:id="wagaSilnikField"
+    @FXML private TextField nazwaSilnikField;
+    @FXML private TextField cenaSilnikField;
+    @FXML private TextField wagaSilnikField;
     @FXML private TextField obrotyField;
-    // Skrzynia biegów
+
+    // Gearbox Controls
     @FXML private Button GearUp;
     @FXML private Button GearDown;
     @FXML private TextField nazwaSkrzyniaField;
     @FXML private TextField cenaSkrzyniaField;
     @FXML private TextField wagaSkrzyniaField;
     @FXML private TextField biegTextField;
-    // Samochód
+
+    // Car & Dashboard
     @FXML private Button TurnOffButton;
     @FXML private Button StartButton;
-    @FXML private ComboBox<Samochod> carSelectorCombo;
+    @FXML private ComboBox<Car> carSelectorCombo;
     @FXML private Button AddingNew;
-    @FXML private Button DeletingCar;
+    @FXML private Button onDeletingCar;
     @FXML public TextField producentField;
     @FXML private TextField modelField;
     @FXML private TextField regField;
     @FXML private TextField wagaField;
     @FXML private TextField predkoscField;
     @FXML private ImageView carImageView;
-    @FXML private Samochod currentCar;
-    // Dioda stanu
-    @FXML private Circle statusIndykator;
-    // Tło
-    @FXML private AnchorPane gamePane;
+    @FXML private Circle statusIndykator; // Status LED
+    @FXML private AnchorPane gamePane;    // Game Background
 
+    // Logic
+    private Car currentCar;
     private AnimationTimer timer;
-    // Flagi sterowania
-    private boolean isUpPressed = false;
-    private boolean isDownPressed = false;
-    private boolean isRightPressed = false; // Gaz
-    private boolean isLeftPressed = false;  // Hamulec
-    // Fizyczna prędkość auta
     private double currentVelocity = 0;
 
-    @FXML
-    private void onStart(ActionEvent actionEvent) {
-        this.currentCar.wlacz();
-        refresh();
-    }
+    // Control Flags
+    private boolean isUpPressed = false;
+    private boolean isDownPressed = false;
+    private boolean isRightPressed = false; // Gas
+    private boolean isLeftPressed = false;  // Brake
+
+    // INITIALIZATION
 
     @FXML
-    private void onTurnOff(ActionEvent actionEvent) {
-        this.currentCar.wylacz();
-        refresh();
-    }
+    private void initialize() {
+        // Create initial cars
+        Car toyota = new Car("DW 12345", "Toyota", "GT86", 230, 1250);
+        Car ford = new Car("KR 55555", "Ford", "Mustang", 250, 1700);
+        Car porsche = new Car("W1 SPEED", "Porsche", "911", 300, 1450);
+        Car defaultCar = new Car("XX 00000", "Generic", "Default", 150, 1000);
 
-    @FXML
-    private void GearUp(ActionEvent actionEvent) {
-        this.currentCar.zwiekszBieg();
-        refresh();
-    }
-
-    @FXML
-    private void GearDown(ActionEvent actionEvent) {
-        this.currentCar.zmniejszBieg();
-        refresh();
-    }
-
-    @FXML
-    private void DeletingCar(ActionEvent actionEvent) {
-        System.out.println("Deleting a car");
-        refresh();
-    }
-
-    @FXML
-    private void initialize(){
-
-        // Tworzenie auta i dodanie go do listy
-        // Nowo powstałe auto nie jest currentCar
-        Samochod toyota = new Samochod("DW 12345", "Toyota", "GT86", 230, 1250);
-        Samochod ford = new Samochod("KR 55555", "Ford", "Mustang", 250, 1700);
-        Samochod porsche = new Samochod("W1 SPEED", "Porsche", "Porsche", 300, 1450);
-        Samochod defaultCar = new Samochod("XX 00000", "Generic", "Default", 150, 1000);
         this.carSelectorCombo.getItems().addAll(toyota, ford, porsche, defaultCar);
 
+        // Listener for car selection
         this.carSelectorCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                this.currentCar = newValue; // Podmiana obiektu na ten wybrany z listy
-                carImageView.setVisible(true); // Zmiana widoczności obrazka w przypadku wyboru modelu
+                this.currentCar = newValue;
+                carImageView.setVisible(true);
                 updateCarImage(newValue);
-
-                refresh();                  // Aktualizacja pól tekstowych
-                System.out.println("Wybrano na auto: " + newValue.getModel());
+                refresh();
+                System.out.println("Selected car: " + newValue.getModel());
             }
         });
 
-        // Początkowe auto to null -> wybierz model lub wprowadź swój
+        // Default state
         this.currentCar = null;
-        // Obrazek niewidoczny
         carImageView.setVisible(false);
-
         this.refresh();
 
-        // Obsługa klawiszy strzałek
-        // Czekamy, aż scena zostanie załadowana, żeby podpiąć klawiaturę
+        // Keyboard setup (Wait for scene to load)
         carImageView.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null)
-            {
-                newScene.setOnKeyPressed(event -> {
-                    switch (event.getCode())
-                    {
-                        case UP: isUpPressed = true; break;
-                        case DOWN: isDownPressed = true; break;
-                        case RIGHT: isRightPressed = true; break;
-                        case LEFT: isLeftPressed = true; break;
-                    }
-                });
-
-                newScene.setOnKeyReleased(event -> {
-                    switch (event.getCode())
-                    {
-                        case UP: isUpPressed = false; break;
-                        case DOWN: isDownPressed = false; break;
-                        case RIGHT: isRightPressed = false; break;
-                        case LEFT: isLeftPressed = false; break;
-                    }
-                });
-
-                // Główny panel aplikacji
-                Parent root = newScene.getRoot();
-                // Focus na roocie
-                root.setFocusTraversable(true);
-                // Gdy kliknięcie w tło -> focus na tło (zabranie z przycisków)
-                root.setOnMouseClicked(event -> root.requestFocus());
-                // Analogicznie dla obrazka auta
-                carImageView.setOnMouseClicked(event -> root.requestFocus());
-
+            if (newScene != null) {
+                setupKeyboard(newScene);
             }
         });
 
         startTimer();
-
     }
 
-    private void updateCarImage(Samochod car)
-    {
+    private void setupKeyboard(Scene scene) {
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case UP -> isUpPressed = true;
+                case DOWN -> isDownPressed = true;
+                case RIGHT -> isRightPressed = true;
+                case LEFT -> isLeftPressed = true;
+            }
+        });
+
+        scene.setOnKeyReleased(event -> {
+            switch (event.getCode()) {
+                case UP -> isUpPressed = false;
+                case DOWN -> isDownPressed = false;
+                case RIGHT -> isRightPressed = false;
+                case LEFT -> isLeftPressed = false;
+            }
+        });
+
+        // Focus management
+        Parent root = scene.getRoot();
+        root.setFocusTraversable(true);
+        root.setOnMouseClicked(event -> root.requestFocus());
+        carImageView.setOnMouseClicked(event -> root.requestFocus());
+    }
+
+    private void updateCarImage(Car car) {
         String imagePath = switch (car.getModel().toLowerCase()) {
             case "gt86" -> "/gt86.png";
             case "mustang" -> "/mustang.png";
-            case "porsche" -> "/porsche.png";
+            case "911", "porsche" -> "/porsche.png";
             default -> "/default.png";
         };
 
@@ -193,44 +162,110 @@ public class CarSimulatorController {
             var resource = getClass().getResource(imagePath);
             Image imageToLoad;
 
-            // Sprawdzamy czy plik istnieje
             if (resource != null) {
                 imageToLoad = new Image(resource.toExternalForm());
             } else {
-                // Fallback do domyślnego
-                System.out.println("Brak pliku: " + imagePath + ", ładowanie domyślnego.");
+                System.out.println("Missing image: " + imagePath + ", loading fallback.");
                 imageToLoad = new Image(getClass().getResource("/car-icon.png").toExternalForm());
             }
 
-            // Ustawienie wielkości obrazka
             carImageView.setImage(imageToLoad);
-
-            carImageView.setFitWidth(200);       // Maksymalna szerokość: 200px
-            carImageView.setFitHeight(100);      // Maksymalna wysokość: 100px
-            carImageView.setPreserveRatio(true); // Zachowaj proporcje (nie rozciągaj)
-
-            // Reset pozycji
+            carImageView.setFitWidth(200);
+            carImageView.setFitHeight(100);
+            carImageView.setPreserveRatio(true);
             carImageView.setTranslateX(0);
             carImageView.setTranslateY(0);
 
         } catch (Exception e) {
-            System.err.println("Błąd ładowania obrazka: " + e.getMessage());
+            System.err.println("Error loading image: " + e.getMessage());
         }
+    }
 
+    // BUTTON ACTIONS
+
+    @FXML
+    private void onStart(ActionEvent actionEvent) {
+        if (currentCar != null) currentCar.start();
+        refresh();
     }
 
     @FXML
-    private void onOpenAddCarWindow() throws IOException
-    {
+    private void onTurnOff(ActionEvent actionEvent) {
+        if (currentCar != null) currentCar.stop();
+        refresh();
+    }
+
+    @FXML
+    private void GearUp(ActionEvent actionEvent) {
+        if (currentCar != null) currentCar.shiftUp();
+        refresh();
+    }
+
+    @FXML
+    private void GearDown(ActionEvent actionEvent) {
+        if (currentCar != null) currentCar.shiftDown();
+        refresh();
+    }
+
+    @FXML
+    private void Press(ActionEvent actionEvent) {
+        if (currentCar != null && currentCar.getClutch() != null) {
+            currentCar.getClutch().press();
+            refresh();
+        }
+    }
+
+    @FXML
+    private void EaseDown(ActionEvent actionEvent) {
+        if (currentCar != null && currentCar.getClutch() != null) {
+            currentCar.getClutch().release();
+            refresh();
+        }
+    }
+
+    @FXML
+    private void SpeedUp(ActionEvent actionEvent) {
+        if (currentCar == null) return;
+        if (currentCar.isOn() && currentCar.getEngine() != null) {
+            currentCar.getEngine().increaseRpm(400);
+            System.out.println("Gas added (Button)");
+        } else {
+            System.out.println("Engine is off!");
+        }
+        refresh();
+    }
+
+    @FXML
+    private void SlowDown(ActionEvent actionEvent) {
+        if (currentCar != null && currentCar.getEngine() != null) {
+            currentCar.getEngine().decreaseRpm(400);
+        }
+        refresh();
+    }
+
+    @FXML
+    private void onDeletingCar(ActionEvent actionEvent) {
+        Car selectedCar = carSelectorCombo.getSelectionModel().getSelectedItem();
+        if (selectedCar != null) {
+            carSelectorCombo.getItems().remove(selectedCar);
+            System.out.println("Deleted car: " + selectedCar.getModel());
+            this.currentCar = null; // Clear current car
+            refresh();
+        }
+    }
+
+    @FXML
+    private void onOpenAddCarWindow() throws IOException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addCar.fxml"));
             Parent root = loader.load();
 
             AddCarController controller = loader.getController();
-            controller.setHelloController(this);
+            // This method must exist in AddCarController:
+            controller.setMainController(this);
 
             Stage stage = new Stage();
-            stage.setTitle("Dodaj nowy samochód");
+            stage.setTitle("Add New Car");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -238,276 +273,101 @@ public class CarSimulatorController {
         }
     }
 
-    @FXML
-    private void onDeletingCar()
-    {
-        Samochod selectedCar = carSelectorCombo.getSelectionModel().getSelectedItem();
-
-        if (selectedCar != null) {
-            // Usuń z listy
-            carSelectorCombo.getItems().remove(selectedCar);
-            System.out.println("Usunięto auto: " + selectedCar.getModel());
-        } else {
-            System.out.println("Nie wybrano auta do usunięcia.");
-        }
-    }
-
-    void AddingCar(Samochod car) {
-        // Dodanie auta do listy
+    // Called from AddCarController
+    public void addCarToList(Car car) {
         this.carSelectorCombo.getItems().add(car);
-        // Wybór auta dodanego
-        carSelectorCombo.getSelectionModel().select(car);
+        this.carSelectorCombo.getSelectionModel().select(car);
         this.refresh();
-
     }
 
-    @FXML
-    private void Press(ActionEvent actionEvent)
-    {
-        // Musisz mieć getter getSprzeglo() w klasie Samochod!
-        // Oraz metodę wcisnij() w klasie Sprzeglo
-        if(this.currentCar.getSprzeglo() != null) {
-            this.currentCar.getSprzeglo().wcisnij();
-            refresh();
-        }
-    }
-
-    @FXML
-    private void EaseDown(ActionEvent actionEvent)
-    {
-        if(this.currentCar.getSprzeglo() != null) {
-            this.currentCar.getSprzeglo().zwolnij();
-            refresh();
-        }
-    }
-
-    @FXML
-    private void SpeedUp(ActionEvent actionEvent)
-    {
-        if (currentCar == null ) return;
-
-        if (currentCar.czyWlaczony())
-        {
-            if (currentCar.getSilnik() != null)
-            {
-                currentCar.getSilnik().zwiekszObroty(400);
-                System.out.println("Dodano gazu");
-            }
-        } else
-        {
-            System.out.println("Najpierw włącz silnik");
-        }
-
-        refresh();
-    }
-
-    @FXML
-    private void SlowDown(ActionEvent actionEvent)
-    {
-        if (currentCar.getSilnik() != null) { currentCar.getSilnik().zmniejszObroty(400); }
-        System.out.println("Odjęto gazu");
-        refresh();
-    }
-
-    private void refresh() {
-
-        if (currentCar == null)
-        {
-            producentField.setText("");
-            producentField.setText("");
-            modelField.setText("");
-            regField.setText("");
-            wagaField.setText("");
-            predkoscField.setText("");
-            nazwaSkrzyniaField.setText("");
-            biegTextField.setText("");
-            obrotyField.setText("");
-            sprzegloStanField.setText("");
-            return;
-
-        }
-
-        // Jeśli auto wybrane -> wyświetl dane
-        producentField.setText(currentCar.getProducent());
-        modelField.setText(currentCar.getModel());
-        regField.setText(currentCar.getReg());
-        wagaField.setText(String.valueOf(currentCar.getWaga()));
-        predkoscField.setText(String.valueOf(currentCar.getSpeed()));
-
-        // Komponenty
-        if (currentCar.getSkrzynia() != null)
-        {
-            nazwaSkrzyniaField.setText(currentCar.getSkrzynia().getModel());
-            biegTextField.setText(String.valueOf(currentCar.getAktualnyBieg()));
-            nazwaSkrzyniaField.setText(currentCar.getSkrzynia().getNazwaKomponentu());
-            cenaSkrzyniaField.setText(String.valueOf(currentCar.getSkrzynia().getCena()));
-            wagaSkrzyniaField.setText(String.valueOf(currentCar.getSkrzynia().getWaga()));
-        }
-
-        if (currentCar.getSilnik() != null)
-        {
-            // Upewnij się, że masz metodę getObroty() w Silniku
-            obrotyField.setText(String.valueOf(currentCar.getSilnik().getObroty()));
-
-            if (nazwaSilnikField != null)
-            {
-                nazwaSilnikField.setText(currentCar.getSilnik().getNazwaKomponentu());
-                cenaSilnikField.setText(String.valueOf(currentCar.getSilnik().getCena()));
-                wagaSilnikField.setText(String.valueOf(currentCar.getSilnik().getWaga()));
-            }
-        }
-
-        if (currentCar.getSprzeglo() != null)
-        {
-            String stan = currentCar.getIsSprzegloPressed() ? "Wciśnięte" : "Zwolnione";
-            sprzegloStanField.setText(stan);
-
-            if (nazwaSprzegloField != null) {
-                nazwaSprzegloField.setText(currentCar.getSprzeglo().getNazwaKomponentu());
-                cenaSprzegloField.setText(String.valueOf(currentCar.getSprzeglo().getCena()));
-                wagaSprzegloField.setText(String.valueOf(currentCar.getSprzeglo().getWaga()));
-            }
-        }
-
-        // Obsługa diody
-        if (statusIndykator != null)
-        {
-            if (currentCar != null && currentCar.czyWlaczony())
-            {
-                statusIndykator.setFill(Color.LIGHTGREEN); // Włączony -> dioda zielona
-                statusIndykator.setEffect(new javafx.scene.effect.Glow(0.8)); // Efekt świecenia
-            } else
-            {
-                statusIndykator.setFill(Color.RED); // Wyłączony -> Czerwony
-                statusIndykator.setEffect(null); // Wyłącz efekt
-            }
-        }
-
-        // Obsługa zmiany koloru obrotomierza
-        if (currentCar.getSilnik() != null)
-        {
-            int rpm = currentCar.getSilnik().getObroty();
-            if (rpm > red_line_rpm)
-            {
-                obrotyField.setStyle("-fx-control-inner-background: #ffcccc; -fx-text-fill: red; -fx-font-weight: bold;");
-            } else if (rpm > warn_rpm)
-            {
-                obrotyField.setStyle("-fx-control-inner-background: #ffffe0; -fx-text-fill: black;");
-            } else
-            {
-                obrotyField.setStyle(null);
-            }
-        }
-    }
+    // SIMULATION LOOP & LOGIC
 
     private void startTimer() {
         this.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // Jeśli nie ma auta, nic nie rób
                 if (currentCar == null) return;
 
-                // Oś Y (Góra / Dół) - Zmiana pasa ruchu
-                // Działa zawsze, niezależnie od tego czy silnik włączony (można przepychać auto)
-                if (isUpPressed)
-                {
+                // Y AXIS (Lane Change)
+                if (isUpPressed) {
                     carImageView.setTranslateY(carImageView.getTranslateY() - 5);
-                    carImageView.setRotate(-15); // Obrót o -15 stopni w lewo/górę
-                } else if (isDownPressed)
-                {
+                    carImageView.setRotate(-15);
+                } else if (isDownPressed) {
                     carImageView.setTranslateY(carImageView.getTranslateY() + 5);
-                    carImageView.setRotate(15); // Obrót o +15 stopni w prawo/dół
-                } else
-                {
-                    carImageView.setRotate(0); // Wyprostowanie kół
+                    carImageView.setRotate(15);
+                } else {
+                    carImageView.setRotate(0);
                 }
 
-                // Oś X (Gaz / Hamulec)
-                if (isRightPressed && currentCar.czyWlaczony()) {
-                    // GAZ: Jeśli sprzęgło puszczone -> rosną obroty
-                    if (!currentCar.getIsSprzegloPressed()) {
-                        // Dodajemy mniej niż przyciskiem
-                        int gear = currentCar.getAktualnyBieg();
+                // X AXIS (Physics)
+                if (isRightPressed && currentCar.isOn()) {
+                    // GAS
+                    if (!currentCar.isClutchPressed()) {
+                        int gear = currentCar.getCurrentGear();
                         if (gear == 0) gear = 1;
-                        // Baza przyspieszenia to 15
-                        // Dzielimy przez numer biegu
-                        // Na 1 szybciej zbiera obroty niż np. na 5
-                        int acceleration = 15/gear;
-                        currentCar.getSilnik().zwiekszObroty(acceleration);
+                        // Acceleration depends on gear (lower gear = faster rpm gain)
+                        int acceleration = 15 / gear;
+                        currentCar.getEngine().increaseRpm(acceleration);
                     } else {
-                        // Na sprzęgle "gazujemy" na pusto (obroty rosną szybciej)
-                        currentCar.getSilnik().zwiekszObroty(100);
+                        // Revving on neutral/clutch
+                        currentCar.getEngine().increaseRpm(100);
                     }
 
-                } else if (isLeftPressed) // HAMULEC
-                {
-                    currentCar.hamuj();
-
-                    // Jeśli wciśnięte sprzęgło
-                    if (currentCar.getIsSprzegloPressed())
-                    {
-                        currentVelocity -= brake_force_wheels;
+                } else if (isLeftPressed) {
+                    // BRAKE
+                    currentCar.brake();
+                    if (currentCar.isClutchPressed()) {
+                        currentVelocity -= BRAKE_FORCE_WHEELS;
                         if (currentVelocity < 0) currentVelocity = 0;
                     }
-                } else
-                {
-                    // PUSZCZENIE GAZU: Silnik powoli zwalnia (opór)
-                    currentCar.getSilnik().zmniejszObroty(10);
+                } else {
+                    // IDLE (Engine drag)
+                    currentCar.getEngine().decreaseRpm(10);
                 }
 
-                // Symulacja zgaśnięcia silnika
-                // Obroty spadną poniżej minimalnych na biegu i bez sprzęgła -> silnik gaśnie
-                if (currentCar.czyWlaczony()
-                    && currentCar.getAktualnyBieg() > 0
-                    && !currentCar.getIsSprzegloPressed()
-                    && currentCar.getSilnik().getObroty() < 300)
-                {
-                    currentCar.wylacz();
-                    System.out.println("Silnik zgasł. Zbyt małe obroty na biegu");
+                // Stall Logic
+                if (currentCar.isOn() && currentCar.getCurrentGear() > 0 &&
+                        !currentCar.isClutchPressed() && currentCar.getEngine().getRpm() < 300) {
+                    currentCar.stop();
+                    System.out.println("Engine stalled!");
                 }
 
-                // Pobranie aktualnej prędkości (która wynika z obrotów ustawionych wyżej)
+                // SPEED CALCULATION
                 double engineTargetSpeed = currentCar.getSpeed();
 
-                if (!currentCar.getIsSprzegloPressed())
-                {
-                    // Sprzęgło PUSZCZONE (zwolnione):
-                    // Koła kręcą się tak, jak silnik (auto przyspiesza lub hamuje silnikiem)
+                if (!currentCar.isClutchPressed()) {
+                    // Clutch Released: Wheels locked to engine speed
                     currentVelocity = engineTargetSpeed;
-                } else
-                {
-                    // Sprzęgło WCIŚNIĘTE:
-                    // Rozłączamy silnik! Auto toczy się siłą rozpędu, ale powoli zwalnia (tarcie)
-                    currentVelocity *= friction_clutch_pressed; // Zwalniamy o 1% co klatkę
-
-                    if (currentVelocity < 0.1) currentVelocity = 0; // Zatrzymanie
+                } else {
+                    // Clutch Pressed: Coasting (Friction slows down)
+                    currentVelocity *= FRICTION_CLUTCH_PRESSED;
+                    if (currentVelocity < 0.1) currentVelocity = 0;
                 }
 
-                // Przesunięcie obrazka
-                carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * movement_factor));
+                // Move Image
+                carImageView.setTranslateX(carImageView.getTranslateX() + (currentVelocity * MOVEMENT_FACTOR));
 
-                // Pętla mapy (teleportacja jak wyjedzie za ekran) na osi X
-                // Dynamiczne
+                // MAP LOOPING
                 double currentWindowWidth = gamePane.getWidth();
+
+                // Loop X
                 if (carImageView.getTranslateX() > currentWindowWidth) {
-                    carImageView.setTranslateX(start_x_position);
-                }
-                // Pętla mapy na osi Y
-                if (carImageView.getTranslateY() > max_y_position)
-                {
-                    carImageView.setTranslateY(min_y_position);
-                } else if (carImageView.getTranslateY() < min_y_position)
-                {
-                    carImageView.setTranslateY(max_y_position);
+                    carImageView.setTranslateX(START_X_POSITION);
                 }
 
-                // Aktualizacja interfejsu
-                // Bez tego liczby na ekranie by stały w miejscu!
+                // Loop Y
+                if (carImageView.getTranslateY() > MAX_Y_POSITION) {
+                    carImageView.setTranslateY(MIN_Y_POSITION);
+                } else if (carImageView.getTranslateY() < MIN_Y_POSITION) {
+                    carImageView.setTranslateY(MAX_Y_POSITION);
+                }
+
+                // Update UI
                 refresh();
-                // NADPISANIE pola prędkości (żeby pokazywało prędkość kół, a nie silnika)
+                // Overwrite speed field with physics speed
                 predkoscField.setText(String.valueOf(Math.round(currentVelocity)));
 
-                // Jeśli klawisze nie działają, to wymusza działanie na obrazku
+                // Focus fix for keyboard
                 if (isUpPressed || isDownPressed || isRightPressed || isLeftPressed) {
                     carImageView.requestFocus();
                 }
@@ -516,4 +376,75 @@ public class CarSimulatorController {
         this.timer.start();
     }
 
+    private void refresh() {
+        if (currentCar == null) {
+            clearFields();
+            return;
+        }
+
+        // Basic Info
+        producentField.setText(currentCar.getManufacturer());
+        modelField.setText(currentCar.getModel());
+        regField.setText(currentCar.getPlateNumber());
+        wagaField.setText(String.valueOf(currentCar.getWeight()));
+        predkoscField.setText(String.valueOf(currentCar.getSpeed()));
+
+        // Gearbox
+        if (currentCar.getGearbox() != null) {
+            nazwaSkrzyniaField.setText(currentCar.getGearbox().getComponentName());
+            cenaSkrzyniaField.setText(String.valueOf(currentCar.getGearbox().getPrice()));
+            wagaSkrzyniaField.setText(String.valueOf(currentCar.getGearbox().getWeight()));
+            biegTextField.setText(String.valueOf(currentCar.getCurrentGear()));
+        }
+
+        // Engine
+        if (currentCar.getEngine() != null) {
+            obrotyField.setText(String.valueOf(currentCar.getEngine().getRpm()));
+            nazwaSilnikField.setText(currentCar.getEngine().getComponentName());
+            cenaSilnikField.setText(String.valueOf(currentCar.getEngine().getPrice()));
+            wagaSilnikField.setText(String.valueOf(currentCar.getEngine().getWeight()));
+
+            // Tachometer Colors
+            int rpm = currentCar.getEngine().getRpm();
+            if (rpm > RED_LINE_RPM) {
+                obrotyField.setStyle("-fx-control-inner-background: #ffcccc; -fx-text-fill: red; -fx-font-weight: bold;");
+            } else if (rpm > WARN_RPM) {
+                obrotyField.setStyle("-fx-control-inner-background: #ffffe0; -fx-text-fill: black;");
+            } else {
+                obrotyField.setStyle(null);
+            }
+        }
+
+        // Clutch
+        if (currentCar.getClutch() != null) {
+            sprzegloStanField.setText(currentCar.isClutchPressed() ? "Pressed" : "Released");
+            nazwaSprzegloField.setText(currentCar.getClutch().getComponentName());
+            cenaSprzegloField.setText(String.valueOf(currentCar.getClutch().getPrice()));
+            wagaSprzegloField.setText(String.valueOf(currentCar.getClutch().getWeight()));
+        }
+
+        // Status LED
+        if (statusIndykator != null) {
+            if (currentCar.isOn()) {
+                statusIndykator.setFill(Color.LIGHTGREEN);
+                statusIndykator.setEffect(new Glow(0.8));
+            } else {
+                statusIndykator.setFill(Color.RED);
+                statusIndykator.setEffect(null);
+            }
+        }
+    }
+
+    private void clearFields() {
+        producentField.setText("");
+        modelField.setText("");
+        regField.setText("");
+        wagaField.setText("");
+        predkoscField.setText("");
+        nazwaSkrzyniaField.setText("");
+        biegTextField.setText("");
+        obrotyField.setText("");
+        sprzegloStanField.setText("");
+        if (statusIndykator != null) statusIndykator.setFill(Color.GREY);
+    }
 }
