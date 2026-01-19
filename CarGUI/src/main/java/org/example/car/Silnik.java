@@ -96,7 +96,7 @@ public class Silnik extends Komponent
     {
         if (this.obroty > 0)
         {
-            this.obroty -= 300;
+            this.obroty -= 20;
             if (this.obroty < 0) this.obroty = 0;
             // Jeśli silnik włączony i sprzęgło w górze,
             // to w realu auto by zgasło przy 0 obrotów,
