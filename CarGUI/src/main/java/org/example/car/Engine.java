@@ -8,14 +8,17 @@ public class Engine extends Component {
     private final int maxRpm;
     private int currentRpm;
 
-    // Additional properties (hardcoded aesthetics)
-    private final String componentName = "V8 Turbo";
-    private double price = 15000.0;
-    private double weight = 200.0;
+    // Additional properties
+    private final String componentName;
+    private double price;
+    private double weight;
 
-    public Engine(String manufacturer, String model, int maxRpm) {
+    public Engine(String manufacturer, String model, int maxRpm, String componentName, double price, double weight) {
         super(manufacturer, model);
         this.maxRpm = maxRpm;
+        this.componentName = componentName;
+        this.price = price;
+        this.weight = weight;
         this.currentRpm = 0;
     }
 

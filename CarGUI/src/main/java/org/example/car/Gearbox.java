@@ -5,13 +5,16 @@ public class Gearbox extends Component {
     private final int maxGears;
 
     // Additional properties (hardcoded aesthetics)
-    private String componentName = "Manual 6-speed";
-    private double price = 6000.0;
-    private double weight = 60.0;
+    private String componentName;
+    private double price;
+    private double weight;
 
-    public Gearbox(String manufacturer, String model, int maxGears) {
+    public Gearbox(String manufacturer, String model, int maxGears, String componentName, double price, double weight) {
         super(manufacturer, model);
         this.maxGears = maxGears;
+        this.componentName = componentName;
+        this.price = price;
+        this.weight = weight;
         this.currentGear = 0; // Start at neutral (0)
     }
 

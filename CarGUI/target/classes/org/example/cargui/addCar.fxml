@@ -36,12 +36,17 @@
                         <Label text="Max speed (km/h)" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                         <TextField fx:id="maxSpeedField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-
-                        <Label text="Typ Silnika:" prefWidth="100.0" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <Label text="Engine Type:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
                         <ComboBox fx:id="engineTypeCombo" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
+                        <Label text="Gearbox Type:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="gearboxTypeCombo" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-                        <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                        <Label text="Clutch Type:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="clutchTypeCombo" prefWidth="200.0" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+
+                        <HBox spacing="10" GridPane.rowIndex="8" GridPane.columnIndex="1">
                             <Button fx:id="confirmButton" text="Confirm" onAction="#onConfirm"/>
                             <Button fx:id="cancelButton" text="Cancel" onAction="#onCancel"/>
                         </HBox>
