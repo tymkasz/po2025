@@ -33,8 +33,8 @@ public class Car extends Thread {
 
 
     // Full Constructor (Dependency Injection)
-    public Car(Engine engine, Gearbox gearbox, String plateNumber,
-               String manufacturer, String model, int maxSpeed, int weight, Clutch clutch) {
+    public Car(Engine engine, Gearbox gearbox, Clutch clutch, String plateNumber,
+               String manufacturer, String model, int maxSpeed, int weight) {
 
         this.engine = engine;
         this.gearbox = gearbox;

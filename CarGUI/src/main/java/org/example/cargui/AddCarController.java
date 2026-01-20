@@ -12,108 +12,129 @@ import org.example.car.Gearbox;
 
 public class AddCarController {
 
-    // Reference to the main application controller
-    // Needed to pass the new car back to the main list
     private CarSimulatorController mainController;
 
-    // FXML UI Components (Fields linked to .fxml file)
+    // Text fields (car data)
     @FXML private TextField manufacturerField;
     @FXML private TextField modelField;
     @FXML private TextField plateField;
     @FXML private TextField weightField;
     @FXML private TextField maxSpeedField;
 
-    @FXML private ComboBox<String> clutchTypeCombo;
+    // ComboBoxes
     @FXML private ComboBox<String> engineTypeCombo;
     @FXML private ComboBox<String> gearboxTypeCombo;
+    @FXML private ComboBox<String> clutchTypeCombo;
 
     @FXML private Button confirmButton;
     @FXML private Button cancelButton;
 
-    /**
-     * Sets the reference to the main controller.
-     * This allows us to call methods like addCarToList() on the main window.
-     * @param mainController The instance of the main window controller.
-     */
+    // Passing references to the main window
     public void setMainController(CarSimulatorController mainController) {
         this.mainController = mainController;
     }
 
-    /**
-     * Triggered when the Confirm button is clicked.
-     * Validates input, creates a Car object, and sends it to the main controller.
-     */
+    @FXML
+    private void initialize() {
+        // Filling list of engines
+        engineTypeCombo.getItems().addAll(
+                "Standard 1.6 (120 HP)",
+                "Turbo Diesel 2.0 (180 HP)",
+                "Sport V6 (350 HP)",
+                "Monster V8 (500 HP)"
+        );
+        engineTypeCombo.getSelectionModel().selectFirst();
+
+        // Filling list of gearboxes
+        gearboxTypeCombo.getItems().addAll(
+                "City Manual (5-Speed)",
+                "Sport Manual (6-Speed)",
+                "Heavy Truck (12-Speed)"
+        );
+        gearboxTypeCombo.getSelectionModel().selectFirst();
+
+        // Filling list of clutches
+        clutchTypeCombo.getItems().addAll(
+                "Standard Clutch",
+                "Sport Clutch",
+                "Ceramic Racing Clutch"
+        );
+        clutchTypeCombo.getSelectionModel().selectFirst();
+    }
+
     @FXML
     private void onConfirm() {
         try {
-            // Retrieve text data from GUI fields
+            // Downloading default data
             String manufacturer = manufacturerField.getText();
             String model = modelField.getText();
-            String plateNumber = plateField.getText();
+            String plate = plateField.getText();
+
+            // Parsing numbers (may throw an error if you type "abc")
             int weight = Integer.parseInt(weightField.getText());
             int maxSpeed = Integer.parseInt(maxSpeedField.getText());
 
-            // Create components based on selection
+            // CREATING COMPONENTS BASED ON SELECTION (Factory)
             Engine selectedEngine = createEngine(engineTypeCombo.getValue());
             Gearbox selectedGearbox = createGearbox(gearboxTypeCombo.getValue());
             Clutch selectedClutch = createClutch(clutchTypeCombo.getValue());
 
-            // Create a new Car object
+            // BUILDING A CAR
+            // We use the full Car constructor with dependency injection
             Car newCar = new Car(
                     selectedEngine,
                     selectedGearbox,
-                    plateNumber,
+                    selectedClutch,
+                    plate,
                     manufacturer,
                     model,
                     maxSpeed,
-                    weight,
-                    selectedClutch
+                    weight
             );
 
-            // Send the new car to the main controller to update the list
+            // Sending the finished car to the main window
             if (mainController != null) {
                 mainController.addCarToList(newCar);
             }
 
-            // Close the popup window
+            //Closing the window
             closeWindow();
 
         } catch (NumberFormatException e) {
-            // Handle invalid input (e.g. "abc" in speed field)
-            System.err.println("Error: Invalid number format. Please check Speed and Weight fields.");
+            System.err.println("Error: Please enter valid numbers in the Weight and Speed fields!");
+            // TODO: zmiana koloru ramki na czerwono
+        } catch (Exception e) {
+            System.err.println("Another error when creating a car:" + e.getMessage());
         }
     }
 
-    /**
-     * Triggered when the Cancel button is clicked.
-     * Closes the window without saving.
-     */
     @FXML
     private void onCancel() {
         closeWindow();
     }
 
-    // Helper method to close the current stage (window)
     private void closeWindow() {
         Stage stage = (Stage) confirmButton.getScene().getWindow();
         stage.close();
     }
 
+    // FACTORY METHODS (Create objects based on name)
+
     private Engine createEngine(String selection) {
-        if (selection == null) selection = "Standard"; // Zabezpieczenie
+        if (selection == null) selection = "Standard";
 
         return switch (selection) {
-            case "Sport V6 Turbo (350 HP)" ->
-                    new Engine("Toyota", "2GR-FE", 7500, "V6 Biturbo", 25000.0, 180.0);
+            case "Turbo Diesel 2.0 (180 HP)" ->
+                    new Engine("VW", "TDI", 4500, "2.0 TDI", 12000, 180);
+
+            case "Sport V6 (350 HP)" ->
+                    new Engine("Nissan", "VQ37", 7500, "3.7L V6", 25000, 220);
 
             case "Monster V8 (500 HP)" ->
-                    new Engine("Ford", "Coyote", 6800, "5.0L V8", 40000.0, 250.0);
-
-            case "High-Rev Bike Engine" ->
-                    new Engine("Suzuki", "Hayabusa", 11000, "1.3L Inline-4", 12000.0, 80.0);
+                    new Engine("Ford", "Coyote", 7000, "5.0L V8", 35000, 250);
 
             default -> // "Standard 1.6"
-                    new Engine("Generic", "1.6 MPI", 6000, "EcoTec", 8000.0, 120.0);
+                    new Engine("Generic", "1.6 MPI", 6000, "EcoEngine", 5000, 130);
         };
     }
 
@@ -121,14 +142,14 @@ public class AddCarController {
         if (selection == null) selection = "Standard";
 
         return switch (selection) {
-            case "Manual 6-Speed (Sport)" ->
-                    new Gearbox("ZF", "6MT-Sport", 6, "Short Shifter", 5000.0, 55.0);
+            case "Sport Manual (6-Speed)" ->
+                    new Gearbox("ZF", "6MT", 6, "Short Shift", 6000, 55);
 
-            case "Truck 12-Speed (Heavy)" ->
-                    new Gearbox("Eaton", "Fuller", 12, "Heavy Duty", 15000.0, 200.0);
+            case "Heavy Truck (12-Speed)" ->
+                    new Gearbox("Eaton", "Fuller", 12, "Heavy Duty", 15000, 200);
 
-            default -> // "Manual 5-Speed"
-                    new Gearbox("Aisin", "5MT", 5, "City Box", 3000.0, 45.0);
+            default -> // "City Manual (5-Speed)"
+                    new Gearbox("Aisin", "5MT", 5, "City Box", 3000, 45);
         };
     }
 
@@ -137,43 +158,13 @@ public class AddCarController {
 
         return switch (selection) {
             case "Sport Clutch" ->
-                    new Clutch("Exedy", "Stage 1", "Sport Plate", 1500.0, 12.0);
+                    new Clutch("Exedy", "Stage 1", "Sport Disc", 1500, 12);
 
-            case "Racing Ceramic Clutch" ->
-                    new Clutch("Sachs", "Race", "Ceramic Disc", 4000.0, 10.0);
+            case "Ceramic Racing Clutch" ->
+                    new Clutch("Sachs", "Race", "Ceramic", 4000, 10);
 
-            default -> // "Standard"
-                    new Clutch("Valeo", "OEM", "Organic Disc", 800.0, 15.0);
+            default -> // "Standard Clutch"
+                    new Clutch("Valeo", "OEM", "Organic", 800, 15);
         };
     }
-
-    @FXML
-    private void initialize() {
-
-        // 1. Populate Engine Options
-        engineTypeCombo.getItems().addAll(
-                "Standard 1.6 (150 HP)",
-                "Sport V6 Turbo (350 HP)",
-                "Monster V8 (500 HP)"
-        );
-        engineTypeCombo.getSelectionModel().selectFirst();
-
-        // 2. Populate Gearbox Options
-        gearboxTypeCombo.getItems().addAll(
-                "Manual 5-Speed (City)",
-                "Manual 6-Speed (Sport)",
-                "Truck 12-Speed (Heavy)"
-        );
-        gearboxTypeCombo.getSelectionModel().selectFirst();
-
-        // 3. Populate Clutch Options
-        clutchTypeCombo.getItems().addAll(
-                "Standard Clutch",
-                "Sport Clutch",
-                "Racing Ceramic Clutch"
-        );
-        clutchTypeCombo.getSelectionModel().selectFirst();
-
-    }
-
 }
