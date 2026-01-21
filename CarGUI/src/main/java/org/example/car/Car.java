@@ -126,7 +126,7 @@ public class Car extends Thread {
         this.isEngineOn = false;
     }
 
-    // Stop thread when app is closed
+    // Stop thread
     public void killThread() {
         this.isRunning = false;
     }
