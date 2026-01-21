@@ -94,7 +94,7 @@ public class CarSimulatorController implements Observer {
                 "KRA 123", "Porsche", "911", 300, 1400
         );
 
-        carSelectorCombo.getItems().add(mustang);
+        carSelectorCombo.getItems().addAll(mustang, toyota, porsche);
 
         // Listener for car selection
         carSelectorCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -165,9 +165,18 @@ public class CarSimulatorController implements Observer {
         // Components Info
         if (currentCar.getEngine() != null) {
             nameEngineField.setText(currentCar.getEngine().getComponentName());
+            priceEngineField.setText(String.valueOf(currentCar.getEngine().getPrice()));
+            weightEngineField.setText(String.valueOf(currentCar.getEngine().getWeight()));
         }
         if (currentCar.getGearbox() != null) {
             nameGearboxField.setText(currentCar.getGearbox().getComponentName());
+            priceGearboxField.setText(String.valueOf(currentCar.getGearbox().getPrice()));
+            weightGearboxField.setText(String.valueOf(currentCar.getGearbox().getWeight()));
+        }
+        if (currentCar.getClutch() != null) {
+            nameClutchField.setText(currentCar.getClutch().getComponentName());
+            priceClutchField.setText(String.valueOf(currentCar.getClutch().getPrice()));
+            weightClutchField.setText(String.valueOf(currentCar.getClutch().getWeight()));
         }
 
         // Engine status LED
