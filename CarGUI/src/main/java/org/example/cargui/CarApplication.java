@@ -17,4 +17,10 @@ public class CarApplication extends Application {
         stage.setMaximized(true);
         stage.show();
     }
+
+    @Override
+    public void stop() {
+        System.out.println("Closing the app");
+        System.exit(0);
+    }
 }
