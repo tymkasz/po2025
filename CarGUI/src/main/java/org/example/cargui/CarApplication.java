@@ -11,7 +11,7 @@ public class CarApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(CarApplication.class.getResource("car-simulator-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 550);
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Car Simulator");
         stage.setScene(scene);
         stage.setMaximized(true);
