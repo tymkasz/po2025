@@ -80,6 +80,20 @@ public class CarSimulatorController implements Observer {
                 "DW 123", "Ford", "Mustang", 250, 1600
         );
 
+        Car toyota = new Car(
+                new Engine("Toyota", "V6", 6500, "GT", 10000, 200),
+                new Gearbox("Aisin", "Manual", 6, "Sporty", 3000, 45),
+                new Clutch("Aisin", "KH-634", "Sporty", 800, 15),
+                "KR 123", "Toyota", "GT86", 300, 1300
+        );
+
+        Car porsche = new Car(
+                new Engine("Porsche", "V7", 6700, "OHV", 18000, 180),
+                new Gearbox("PDK", "Manual", 7, "Classic", 4000, 50),
+                new Clutch("Dual", "OP-09", "Classic", 900, 10),
+                "KRA 123", "Porsche", "911", 300, 1400
+        );
+
         carSelectorCombo.getItems().add(mustang);
 
         // Listener for car selection
@@ -95,7 +109,7 @@ public class CarSimulatorController implements Observer {
                 double xTarget = event.getX();
                 double yTarget = event.getY();
 
-                // Centrowanie obrazka
+                // Image centring
                 double correctedX = xTarget - (carImageView.getFitWidth() / 2);
                 double correctedY = yTarget - (carImageView.getFitHeight() / 2);
 
