@@ -7,18 +7,14 @@ public class Car extends Thread {
     // Components
     private final Engine engine;
     private final Gearbox gearbox;
-    private final Clutch clutch;
+
+    private final Position position;
 
     // Identification data
     private final String plateNumber;
     private final String model;
     private final String manufacturer;
-    private final int maxSpeed;
     private final int weight;
-
-    // Position
-    private double xPosition = 0.0; // Starting X position
-    private double yPosition = 0.0; // Starting Y position
 
     // Mouse target
     private double xTarget = 0.0;
@@ -33,26 +29,18 @@ public class Car extends Thread {
 
 
     // Full Constructor (Dependency Injection)
-    public Car(Engine engine, Gearbox gearbox, Clutch clutch, String plateNumber,
-               String manufacturer, String model, int maxSpeed, int weight) {
+    public Car(Engine engine, Gearbox gearbox, String plateNumber,
+               String manufacturer, String model, int weight) {
 
         this.engine = engine;
         this.gearbox = gearbox;
-        this.clutch = clutch;
 
         this.plateNumber = plateNumber;
         this.manufacturer = manufacturer;
         this.model = model;
-        this.maxSpeed = maxSpeed;
         this.weight = weight;
 
-        this.xPosition = 0;
-        this.yPosition = 0;
-        this.xTarget = 0;
-        this.yTarget = 0;
-
-        this.isEngineOn = false;
-        this.isRunning = true; // Thread ready to work
+        this.position = new Position(0,0);
 
     }
 
@@ -62,11 +50,7 @@ public class Car extends Thread {
         while (isRunning) {
             try {
                 Thread.sleep(16);
-
-                if (isEngineOn) {
-                    calculateMovement();
-                }
-
+                if (isEngineOn) { calculateMovement(); }
                 notifyObservers();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -75,8 +59,8 @@ public class Car extends Thread {
     }
 
     private void calculateMovement() {
-        double dx = xTarget - xPosition;
-        double dy = yTarget - yPosition;
+        double dx = xTarget - position.getX();
+        double dy = yTarget - position.getY();
         double distance = Math.sqrt(dx * dx + dy * dy);
 
         // If we are near target, stop
@@ -84,17 +68,15 @@ public class Car extends Thread {
 
         // With higher rpms, faster it goes
         double speedFactor = (engine.getRpm() * 0.002);
-
         if (speedFactor > 10) speedFactor = 10;
-        if (speedFactor < 0) speedFactor = 0;
 
         // Vector normalization
         double moveX = (dx / distance) * speedFactor;
         double moveY = (dy / distance) * speedFactor;
 
         // Position update
-        this.xPosition += moveX;
-        this.yPosition += moveY;
+        position.setX(position.getX() + moveX);
+        position.setY(position.getY() + moveY);
 
     }
 
@@ -112,58 +94,47 @@ public class Car extends Thread {
     // Control
     public void startEngine() {
         if (!isEngineOn) {
-            this.engine.start();
-            this.isEngineOn = true;
+            engine.start();
+            isEngineOn = true;
             // If thread is not already working, start it
-            if (!this.isAlive()) {
-                this.start();
-            }
+            if (!this.isAlive()) this.start();
         }
     }
 
     public void stopEngine() {
-        this.engine.stop();
-        this.isEngineOn = false;
+        engine.stop();
+        isEngineOn = false;
     }
 
-    // Stop thread
-    public void killThread() {
-        this.isRunning = false;
+    // Delegations and getters
+    public void shiftUp() {
+        try { gearbox.shiftUp(); } catch (CarException e) { System.out.println(e.getMessage()); }
+    }
+    public void shiftDown() {
+        try { gearbox.shiftDown(); } catch (CarException e) { System.out.println(e.getMessage()); }
     }
 
-    // Observer
-    public void addObserver(Observer o) {
-        observers.add(o);
-    }
-
-    private void notifyObservers() {
-        for (Observer o : observers) {
-            o.update();
-        }
-    }
-
-    // Getters
-    public double getXPosition() { return xPosition; }
-    public double getYPosition() { return yPosition; }
+    // Access to components
     public Engine getEngine() { return engine; }
     public Gearbox getGearbox() { return gearbox; }
-    public Clutch getClutch() { return clutch; }
-    public boolean isOn() { return isEngineOn; }
+    public Clutch getClutch() { return gearbox.getClutch(); } // Delegation to gearbox
+    public Position getPosition() { return position; }
+
+    // Informative
+    public double getXPosition() { return position.getX(); }
+    public double getYPosition() { return position.getY(); }
+    public int getSpeed() { return (int)(engine.getRpm() * 0.05); }
     public String getModel() { return model; }
     public String getManufacturer() { return manufacturer; }
     public String getPlateNumber() { return plateNumber; }
     public int getWeight() { return weight; }
-    public int getSpeed() { return (int)(engine.getRpm() * 0.05); } // Simplified speed for display
-    public int getCurrentGear() { return gearbox.getCurrentGear(); }
-    public boolean isClutchPressed() { return clutch.isPressed(); }
+    public boolean isOn() { return isEngineOn; }
 
-    @Override
-    public String toString() { return manufacturer + " " + model; }
+    @Override public String toString() { return manufacturer + " " + model; }
 
-    // Delegations to components (for controller compatibility)
-    public void shiftUp() { gearbox.shiftUp(); }
-    public void shiftDown() { gearbox.shiftDown(); }
-    public void brake() { engine.brake(); }
+    // Observer
+    public void addObserver(Observer o) { observers.add(o); }
+    private void notifyObservers() { for (Observer o : observers) o.update(); }
 
 }
 
