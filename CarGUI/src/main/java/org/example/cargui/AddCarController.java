@@ -19,7 +19,6 @@ public class AddCarController {
     @FXML private TextField modelField;
     @FXML private TextField plateField;
     @FXML private TextField weightField;
-    @FXML private TextField maxSpeedField;
 
     // ComboBoxes
     @FXML private ComboBox<String> engineTypeCombo;
@@ -69,26 +68,23 @@ public class AddCarController {
             String manufacturer = manufacturerField.getText();
             String model = modelField.getText();
             String plate = plateField.getText();
-
             // Parsing numbers (may throw an error if you type "abc")
             int weight = Integer.parseInt(weightField.getText());
-            int maxSpeed = Integer.parseInt(maxSpeedField.getText());
 
             // CREATING COMPONENTS BASED ON SELECTION (Factory)
-            Engine selectedEngine = createEngine(engineTypeCombo.getValue());
-            Gearbox selectedGearbox = createGearbox(gearboxTypeCombo.getValue());
             Clutch selectedClutch = createClutch(clutchTypeCombo.getValue());
+            // Injecting Clutch into Gearbox
+            Gearbox selectedGearbox = createGearbox(gearboxTypeCombo.getValue(), selectedClutch);
+            Engine selectedEngine = createEngine(engineTypeCombo.getValue());
 
             // BUILDING A CAR
             // We use the full Car constructor with dependency injection
             Car newCar = new Car(
                     selectedEngine,
                     selectedGearbox,
-                    selectedClutch,
                     plate,
                     manufacturer,
                     model,
-                    maxSpeed,
                     weight
             );
 
@@ -96,12 +92,11 @@ public class AddCarController {
             if (mainController != null) {
                 mainController.addCarToList(newCar);
             }
-
             //Closing the window
             closeWindow();
 
         } catch (NumberFormatException e) {
-            System.err.println("Error: Please enter valid numbers in the Weight and Speed fields!");
+            System.err.println("Error: Please enter valid numbers in the Weight and Speed fields");
             // TODO: zmiana koloru ramki na czerwono
         } catch (Exception e) {
             System.err.println("Another error when creating a car:" + e.getMessage());
@@ -122,34 +117,20 @@ public class AddCarController {
 
     private Engine createEngine(String selection) {
         if (selection == null) selection = "Standard";
-
         return switch (selection) {
-            case "Turbo Diesel 2.0 (180 HP)" ->
-                    new Engine("VW", "TDI", 4500, "2.0 TDI", 12000, 180);
-
-            case "Sport V6 (350 HP)" ->
-                    new Engine("Nissan", "VQ37", 7500, "3.7L V6", 25000, 220);
-
-            case "Monster V8 (500 HP)" ->
-                    new Engine("Ford", "Coyote", 7000, "5.0L V8", 35000, 250);
-
-            default -> // "Standard 1.6"
-                    new Engine("Generic", "1.6 MPI", 6000, "EcoEngine", 5000, 130);
+            case "Turbo Diesel 2.0 (180 HP)" -> new Engine("VW", "TDI", 4500, 180, "2.0 TDI", 12000, 180);
+            case "Sport V6 (350 HP)" -> new Engine("Nissan", "VQ37", 7500, 350, "3.7L V6", 25000, 220);
+            case "Monster V8 (500 HP)" -> new Engine("Ford", "Coyote", 7000, 500, "5.0L V8", 35000, 250);
+            default -> new Engine("Generic", "1.6 MPI", 6000, 120, "EcoEngine", 5000, 130);
         };
     }
 
-    private Gearbox createGearbox(String selection) {
+    private Gearbox createGearbox(String selection, Clutch clutch) {
         if (selection == null) selection = "Standard";
-
         return switch (selection) {
-            case "Sport Manual (6-Speed)" ->
-                    new Gearbox("ZF", "6MT", 6, "Short Shift", 6000, 55);
-
-            case "Heavy Truck (12-Speed)" ->
-                    new Gearbox("Eaton", "Fuller", 12, "Heavy Duty", 15000, 200);
-
-            default -> // "City Manual (5-Speed)"
-                    new Gearbox("Aisin", "5MT", 5, "City Box", 3000, 45);
+            case "Sport Manual (6-Speed)" -> new Gearbox("ZF", "6MT", 6, clutch, "Short Shift", 6000, 55);
+            case "Heavy Truck (12-Speed)" -> new Gearbox("Eaton", "Fuller", 12, clutch, "Heavy Duty", 15000, 200);
+            default -> new Gearbox("Aisin", "5MT", 5, clutch, "City Box", 3000, 45);
         };
     }
 
@@ -157,14 +138,10 @@ public class AddCarController {
         if (selection == null) selection = "Standard";
 
         return switch (selection) {
-            case "Sport Clutch" ->
-                    new Clutch("Exedy", "Stage 1", "Sport Disc", 1500, 12);
-
-            case "Ceramic Racing Clutch" ->
-                    new Clutch("Sachs", "Race", "Ceramic", 4000, 10);
-
-            default -> // "Standard Clutch"
-                    new Clutch("Valeo", "OEM", "Organic", 800, 15);
+            case "Sport Clutch" -> new Clutch("Exedy", "Stage 1", "Sport Disc", 1500, 12);
+            case "Ceramic Racing Clutch" -> new Clutch("Sachs", "Race", "Ceramic", 4000, 10);
+            // "Standard Clutch"
+            default -> new Clutch("Valeo", "OEM", "Organic", 800, 15);
         };
     }
 }
