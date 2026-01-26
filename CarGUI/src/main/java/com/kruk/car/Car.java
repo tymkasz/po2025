@@ -1,4 +1,4 @@
-package org.example.car;
+package com.kruk.car;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +105,10 @@ public class Car extends Thread {
         isEngineOn = false;
     }
 
-    public void killThread() { isRunning = false; }
+    public void killThread() {
+        isRunning = false;
+        this.observers.clear();
+    }
 
     // Delegations and getters
     public void shiftUp() {
