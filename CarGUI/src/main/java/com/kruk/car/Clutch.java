@@ -1,4 +1,4 @@
-package org.example.car;
+package com.kruk.car;
 
 public class Clutch extends Component {
     private boolean isPressed;

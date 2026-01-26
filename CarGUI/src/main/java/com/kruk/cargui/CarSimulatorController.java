@@ -1,5 +1,6 @@
-package org.example.cargui;
+package com.kruk.cargui;
 
+import com.kruk.car.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import org.example.car.*;
+import com.kruk.car.*;
 
 import java.io.IOException;
 

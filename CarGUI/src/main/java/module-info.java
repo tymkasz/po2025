@@ -4,6 +4,6 @@ module org.example.cargui {
     requires javafx.graphics;
 
 
-    opens org.example.cargui to javafx.fxml;
-    exports org.example.cargui;
+    opens com.kruk.cargui to javafx.fxml;
+    exports com.kruk.cargui;
 }

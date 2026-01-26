@@ -1,4 +1,4 @@
-package org.example.car;
+package com.kruk.car;
 
 public class CarException extends Exception {
     public CarException(String message) {

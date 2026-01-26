@@ -1,4 +1,4 @@
-package org.example.car;
+package com.kruk.car;
 
 public class Engine extends Component {
     // Engine properties

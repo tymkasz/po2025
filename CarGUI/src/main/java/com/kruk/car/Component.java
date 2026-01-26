@@ -1,4 +1,4 @@
-package org.example.car;
+package com.kruk.car;
 
 /**
  * Abstract base class for all car parts (e.g., Engine, Gearbox).

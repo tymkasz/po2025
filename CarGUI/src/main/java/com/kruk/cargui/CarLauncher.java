@@ -1,4 +1,4 @@
-package org.example.cargui;
+package com.kruk.cargui;
 
 import javafx.application.Application;
 

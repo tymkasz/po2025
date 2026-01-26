@@ -1,14 +1,14 @@
-package org.example.cargui;
+package com.kruk.cargui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.car.Car;
-import org.example.car.Clutch;
-import org.example.car.Engine;
-import org.example.car.Gearbox;
+import com.kruk.car.Car;
+import com.kruk.car.Clutch;
+import com.kruk.car.Engine;
+import com.kruk.car.Gearbox;
 
 public class AddCarController {
 
