@@ -22,7 +22,7 @@ public class Engine extends Component {
     }
 
     public void start() {
-        if (this.currentRpm == 0) currentRpm = 800;
+        if (this.currentRpm == 0) this.currentRpm = 800;
     }
 
     public void stop() {
