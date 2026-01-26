@@ -72,27 +72,23 @@ public class CarSimulatorController implements Observer {
     @FXML
     private void initialize() {
         // Create initial cars
-        // UWAGA: Poprawiona kolejność argumentów zgodnie z konstruktorem Car
-        Car mustang = new Car(
-                new Engine("Ford", "V8", 7000, "Coyote", 15000, 200),
-                new Gearbox("Tremec", "Manual", 6, "Sport", 4000, 50),
-                new Clutch("Exedy", "Stage 1", "Sport", 1000, 10),
-                "DW 123", "Ford", "Mustang", 250, 1600
-        );
+        // Mustang
+        Clutch clutch1 = new Clutch("Exedy", "Stage 1", "Sport", 1000, 10);
+        Gearbox gearbox1 = new Gearbox("Tremec", "Manual", 6, clutch1, "Sport", 4000, 50);
+        Engine engine1 = new Engine("Ford", "V8", 7000, 450, "Coyote", 15000, 200);
+        Car mustang = new Car(engine1, gearbox1, "DW 123", "Ford", "Mustang", 1600);
 
-        Car toyota = new Car(
-                new Engine("Toyota", "V6", 6500, "GT", 10000, 200),
-                new Gearbox("Aisin", "Manual", 6, "Sporty", 3000, 45),
-                new Clutch("Aisin", "KH-634", "Sporty", 800, 15),
-                "KR 123", "Toyota", "GT86", 300, 1300
-        );
+        // Toyota
+        Clutch clutch2 = new Clutch("Aisin", "KH-634", "Sporty", 800, 15);
+        Gearbox gearbox2 = new Gearbox("Aisin", "Manual", 6, clutch2, "Sporty", 3000, 45);
+        Engine engine2 = new Engine("Toyota", "V6", 6500, 200, "GT", 10000, 200);
+        Car toyota = new Car(engine2, gearbox2, "KR 123", "Toyota", "GT86", 1300);
 
-        Car porsche = new Car(
-                new Engine("Porsche", "V7", 6700, "OHV", 18000, 180),
-                new Gearbox("PDK", "Manual", 7, "Classic", 4000, 50),
-                new Clutch("Dual", "OP-09", "Classic", 900, 10),
-                "KRA 123", "Porsche", "911", 300, 1400
-        );
+        // Porsche
+        Clutch clutch3 = new Clutch("Dual", "OP-09", "German Classic", 900, 10);
+        Gearbox gearbox3 = new Gearbox("PDK", "Manual", 7, clutch3, "Classic", 4000, 50);
+        Engine engine3 = new Engine("Porsche", "V7", 6700, 350, "OHV", 18000, 180);
+        Car porsche = new Car(engine3, gearbox3, "KRA 123", "Porsche", "911", 1300);
 
         carSelectorCombo.getItems().addAll(mustang, toyota, porsche);
 
@@ -153,8 +149,8 @@ public class CarSimulatorController implements Observer {
         // Dynamic counters (Update every frame)
         rpmField.setText(String.valueOf(currentCar.getEngine().getRpm()));
         speedField.setText(String.valueOf(currentCar.getSpeed()));
-        gearTextField.setText(String.valueOf(currentCar.getCurrentGear()));
-        clutchStateField.setText(currentCar.isClutchPressed() ? "Pressed" : "Released");
+        gearTextField.setText(String.valueOf(currentCar.getGearbox().getCurrentGear()));
+        clutchStateField.setText(currentCar.getGearbox().getClutch().isPressed() ? "Pressed" : "Released");
 
         // Static Info (Update on selection)
         manufacturerField.setText(currentCar.getManufacturer());
@@ -252,8 +248,8 @@ public class CarSimulatorController implements Observer {
 
     @FXML
     private void Press(ActionEvent actionEvent) {
-        if (currentCar != null && currentCar.getClutch() != null) {
-            currentCar.getClutch().press();
+        if (currentCar != null && currentCar.getGearbox().getClutch() != null) {
+            currentCar.getGearbox().getClutch().press();
             refreshGUI();
         }
     }
@@ -270,13 +266,13 @@ public class CarSimulatorController implements Observer {
     private void DeletingCar(ActionEvent actionEvent) {
         Car selectedCar = carSelectorCombo.getSelectionModel().getSelectedItem();
         if (selectedCar != null) {
-            // Ważne: Zatrzymaj wątek przed usunięciem!
+            // Stop thread before deleting
             selectedCar.killThread();
             carSelectorCombo.getItems().remove(selectedCar);
             System.out.println("Deleted car: " + selectedCar.getModel());
             this.currentCar = null;
             carImageView.setVisible(false);
-            refreshGUI(); // Wyczyść pola
+            refreshGUI(); // Clear fields
         }
     }
 
