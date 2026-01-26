@@ -4,45 +4,42 @@ public class Gearbox extends Component {
     private int currentGear;
     private final int maxGears;
 
+    private final Clutch clutch;
+
     // Additional properties (hardcoded aesthetics)
     private String componentName;
     private double price;
     private double weight;
 
-    public Gearbox(String manufacturer, String model, int maxGears, String componentName, double price, double weight) {
+    public Gearbox(String manufacturer, String model, int maxGears, Clutch clutch, String componentName, double price, double weight) {
         super(manufacturer, model);
         this.maxGears = maxGears;
+        this.clutch = clutch;
         this.componentName = componentName;
         this.price = price;
         this.weight = weight;
         this.currentGear = 0; // Start at neutral (0)
     }
 
-    public void shiftUp() {
-        if (this.currentGear == -1) {
-            this.currentGear = 0;
-            System.out.println("Neutral (N)");
-        } else if (this.currentGear < this.maxGears) {
-            this.currentGear++;
-            System.out.println("Gear: " + this.currentGear);
+    public void shiftUp() throws CarException {
+        if (!clutch.isPressed()) {
+            throw new CarException("Cannot shift: Clutch is not pressed.");
+        }
+        if (currentGear < maxGears) {
+            currentGear++;
         } else {
-            System.out.println("Max gear reached!");
+            throw new CarException("Cannot shift: Max gear reached.");
         }
     }
 
-    public void shiftDown() {
-        if (this.currentGear == 0) {
-            // From Neutral to Reverse
-            this.currentGear = -1;
-            System.out.println("Reverse (R)");
-        } else if (this.currentGear > 0) {
-            // Normal downshift
-            this.currentGear--;
-            if (this.currentGear == 0) {
-                System.out.println("Neutral (N)");
-            } else {
-                System.out.println("Gear: " + this.currentGear);
-            }
+    public void shiftDown() throws CarException {
+        if (!clutch.isPressed()) {
+            throw new CarException("Cannot shift: Clutch is not pressed.");
+        }
+        if (currentGear > -1) {
+            currentGear--;
+        } else {
+            throw new CarException("Cannot shift: Already in reverse.");
         }
     }
 
@@ -51,5 +48,6 @@ public class Gearbox extends Component {
     public double getPrice() { return this.price; }
     public double getWeight() { return this.weight; }
     public int getCurrentGear() { return this.currentGear; }
+    public Clutch getClutch() { return this.clutch; }
 
 }
