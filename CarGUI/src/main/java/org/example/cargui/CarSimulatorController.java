@@ -268,6 +268,7 @@ public class CarSimulatorController implements Observer {
         if (selectedCar != null) {
             // Stop thread before deleting
             selectedCar.killThread();
+            carSelectorCombo.getSelectionModel().clearSelection();
             carSelectorCombo.getItems().remove(selectedCar);
             System.out.println("Deleted car: " + selectedCar.getModel());
             this.currentCar = null;
