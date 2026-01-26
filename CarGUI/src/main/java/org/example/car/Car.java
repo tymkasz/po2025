@@ -77,7 +77,6 @@ public class Car extends Thread {
         // Position update
         position.setX(position.getX() + moveX);
         position.setY(position.getY() + moveY);
-
     }
 
     // Method evoked by mouse clicking
@@ -105,6 +104,8 @@ public class Car extends Thread {
         engine.stop();
         isEngineOn = false;
     }
+
+    public void killThread() { isRunning = false; }
 
     // Delegations and getters
     public void shiftUp() {
